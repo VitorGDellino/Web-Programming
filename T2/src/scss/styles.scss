@@ -162,7 +162,7 @@ input:focus { color:black; }
 
 .logo{
   margin:10px;
-  padding-left: 50px;
+  padding-left: 150px;
   width: 400px;
   height: 100px;
 }
@@ -226,10 +226,10 @@ body {
   font-family: "Montserrat", sans-serif;
   font-smoothing: antialiased;
   background-color: #fac564;
-  background-image: url(/assets/background.png);
+  background-image: url(../assets/background.png);
 }
 
-.container2 {
+.container {
   padding: 25px 100px;
   max-width: 1200px;
   height: 800px;
@@ -237,7 +237,6 @@ body {
 }
 
 .document {
-  background-color: rgba(#fac564,0);
   padding: 40px 20px;
   border-radius: 5px;
 }
