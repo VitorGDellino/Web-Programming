@@ -9,27 +9,31 @@
 
   <body>
       <span>
-      <div class="header">
-        <img class="logo" src="../assets/logo2.png" alt="LOGO"/>
-          <form>
-            <input type="text" name="u" placeholder="Username" required="required" />
-            <input type="password" name="p" placeholder="Password" required="required" />
-            <button class="button1" type="submit">Login</button>
-            <a class="button1" href="../MOCKUPHOMEADMIN/index.html" type="submit">Login Admin</a>
-          </form>
-      </div>
+      <div id="mutableHeader">
+        <div class="header">
+          <img class="logo" src="../assets/logo2.png" alt="LOGO"/>
+            <form id="login">
+              <input type="text" name="userName" placeholder="Username" required="required" />
+              <input type="password" name="passWord" placeholder="Password" required="required" />
+              <a class="button1About" onclick="userLogin();">Login</a>
+              <a class="button1About" onclick="adminLogin();">Login Admin</a>
+            </form>
+        </div>
+    </div>
 
-      <div class="topnav">
-        <a onclick="goToHome()">HOME</a>
-        <a onclick="goToProducts()">SERVIÇOS</a>
-        <a onclick="goToServices()">PRODUTOS</a>
-        <a href="../MOCKUPABOUT/index.html">ABOUT</a>
+      <div id="mutableNavBar">
+        <div class="topnav">
+          <a onclick="goToHome()">HOME</a>
+          <a onclick="goToServices()">SERVIÇOS</a>
+          <a onclick="goToProducts()">PRODUTOS</a>
+          <a onclick="goToAbout()">ABOUT</a>
+        </div>
       </div>
 
       <div id="mutableContent">
         <div class="row" id="pageContent">
-          <div class="container" id="homeContent">
-            <div class="document">
+          <div class="containerHome" id="homeContent">
+            <div class="documentHome">
               <h1>Confie na gente, amamos animais tanto quanto vocês.</h1>
             </div>
           </div>
@@ -53,12 +57,9 @@
         </div>
       </div>
 
-
-
       <script src="/js/jquery.min.js"></script>
       <script src="/js/popper.min.js"></script>
       <script src="/js/bootstrap.min.js"></script>
       <script src="/js/login.js"></script>
-      <script src="/js/changetab.js"></script>
   </body>
 </html>
