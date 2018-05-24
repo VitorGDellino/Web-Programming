@@ -86,7 +86,7 @@ function goToSchedule(){
 /*----------------------------------------------------------------------------*/
 function userCard(name, photo){
     $(document).ready( function(){
-        $("#mutableHeader").load("../html/usercard.html");
+        $("#mutableCard").load("../html/usercard.html");
         console.log(name);
         document.getElementById("personName").innerHTML = name;
     });
@@ -94,13 +94,13 @@ function userCard(name, photo){
 
 function adminCard(name, photo){
     $(document).ready( function(){
-        $("#mutableHeader").load("../html/admincard.html");
+        $("#mutableCard").load("../html/admincard.html");
     });
 }
 
 function loginCard(){
     $(document).ready( function(){
-        $("#mutableHeader").load("../html/logincard.html");
+        $("#mutableCard").load("../html/logincard.html");
     });
 }
 
