@@ -1,86 +1,144 @@
 /*----------------FUNCOES RELACIONADAS A NAVEGACAO----------------------------*/
+state = 0;
+
 function goToHome(){
     $(document).ready( function(){
         document.body.style.backgroundImage = "url(../assets/background.png)";
         $("#mutableContent").load("../html/home.html");
+        state = 0;
     });
 
 }
 
 function goToProducts(){
     $(document).ready( function(){
-        $("#mutableContent").load("../html/produtos.html");
-        document.body.style.backgroundImage = "none";
+        if(state == 0){
+            $("#mutableContent").load("../html/produtos.html");
+            document.body.style.backgroundImage = "none";
+        }else{
+            $("#mutableMiddleColumn").load("../html/colunameioprodutos.html");
+        }
+        state = 1;
     });
 }
 
 function goToServices(){
     $(document).ready( function(){
-        $("#mutableContent").load("../html/servicos.html");
-        document.body.style.backgroundImage = "none";
+        if(state == 0){
+            $("#mutableContent").load("../html/servicos.html");
+            document.body.style.backgroundImage = "none";
+        }else{
+            $("#mutableMiddleColumn").load("../html/colunameioservicos.html");
+        }
+        state = 1
     });
 }
 
 function goToAbout(){
     $(document).ready( function(){
         $("#mutableContent").load("../html/about.html");
+        conole.log("TA AQUI");
         document.body.style.backgroundImage = "none";
+        state = 0;
     });
 }
 
 function goToAdminRegister(){
     $(document).ready( function(){
-        $("#mutableContent").load("../html/adminregister.html");
-        document.body.style.backgroundImage = "none";
+        if(state == 0){
+            $("#mutableContent").load("../html/adminregister.html");
+            document.body.style.backgroundImage = "none";
+        }else{
+            $("#mutableMiddleColumn").load("../html/colunameioadminregister.html");
+        }
+
+        state = 1;
     });
 }
 
 function goToClientRegister(){
     $(document).ready( function(){
-        $("#mutableContent").load("../html/clientregister.html");
-        document.body.style.backgroundImage = "none";
+        if(state == 0){
+            $("#mutableContent").load("../html/clientregister.html");
+            document.body.style.backgroundImage = "none";
+        }else{
+            $("#mutableMiddleColumn").load("../html/colunameioclientregister.html");
+        }
+
+        state = 1;
     });
 }
 
 function goToServiceManager(){
     $(document).ready( function(){
-        $("#mutableContent").load("../html/servicesmanager.html");
-        document.body.style.backgroundImage = "none";
+        if(state == 0){
+            $("#mutableContent").load("../html/servicesmanager.html");
+            document.body.style.backgroundImage = "none";
+        }else{
+            $("#mutableMiddleColumn").load("../html/colunameioservicesmanager.html");
+        }
+
+        state = 1;
     });
 }
 
 function goToStockManager(){
     $(document).ready( function(){
-        $("#mutableContent").load("../html/stockmanager.html");
-        document.body.style.backgroundImage = "none";
+        if(state == 0){
+            $("#mutableContent").load("../html/stockmanager.html");
+            document.body.style.backgroundImage = "none";
+        }else{
+            $("#mutableMiddleColumn").load("../html/colunameiostockmanager.html");
+        }
+        state = 1;
     });
 }
 
 function goToBuy(){
     $(document).ready( function(){
-        $("#mutableContent").load("../html/buy.html");
-        document.body.style.backgroundImage = "none";
+        if(state == 0){
+            $("#mutableContent").load("../html/buy.html");
+            document.body.style.backgroundImage = "none";
+        }else{
+            $("#mutableMiddleColumn").load("../html/colunameiobuy.html");
+        }
+        state = 1;
     });
 }
 
 function goToEditRegister(){
     $(document).ready( function(){
-        $("#mutableContent").load("../html/editregister.html");
-        document.body.style.backgroundImage = "none";
+        if(state == 0){
+            $("#mutableContent").load("../html/editregister.html");
+            document.body.style.backgroundImage = "none";
+        }else{
+            $("#mutableMiddleColumn").load("../html/colunameioeditregister.html");
+        }
+        state = 1;
     });
 }
 
 function goToRegisterOrListPet(){
     $(document).ready( function(){
-        $("#mutableContent").load("../html/registerorlistpet.html");
-        document.body.style.backgroundImage = "none";
+        if(state == 0){
+            $("#mutableContent").load("../html/registerorlistpet.html");
+            document.body.style.backgroundImage = "none";
+        }else{
+            $("#mutableMiddleColumn").load("../html/colunameioregorlistpet.html");
+        }
+        state = 1;
     });
 }
 
 function goToSchedule(){
     $(document).ready( function(){
-        $("#mutableContent").load("../html/schedule.html");
-        document.body.style.backgroundImage = "none";
+        if(state == 0){
+            $("#mutableContent").load("../html/schedule.html");
+            document.body.style.backgroundImage = "none";
+        }else{
+            $("#mutableMiddleColumn").load("../html/colunameioschedule.html");
+        }
+        state = 1;
     });
 }
 /*----------------------------------------------------------------------------*/
