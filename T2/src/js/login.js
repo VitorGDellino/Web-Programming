@@ -3,7 +3,7 @@ state = 0;
 
 function goToHome(){
     $(document).ready( function(){
-        document.body.style.backgroundImage = "url(../assets/background.png)";
+        document.body.style.backgroundImage = "url(./assets/background.png)";
         $("#mutableContent").load("../html/home.html");
         state = 0;
     });
@@ -37,7 +37,6 @@ function goToServices(){
 function goToAbout(){
     $(document).ready( function(){
         $("#mutableContent").load("../html/about.html");
-        conole.log("TA AQUI");
         document.body.style.backgroundImage = "none";
         state = 0;
     });
@@ -51,7 +50,6 @@ function goToAdminRegister(){
         }else{
             $("#mutableMiddleColumn").load("../html/colunameioadminregister.html");
         }
-
         state = 1;
     });
 }
@@ -63,8 +61,8 @@ function goToClientRegister(){
             document.body.style.backgroundImage = "none";
         }else{
             $("#mutableMiddleColumn").load("../html/colunameioclientregister.html");
-        }
 
+        }
         state = 1;
     });
 }
@@ -106,6 +104,13 @@ function goToBuy(){
     });
 }
 
+function goToFinalizeBuy(){
+    $(document).ready( function(){
+        $("#mutableMiddleColumn").load("../html/colunameioprodutocartao.html");
+        state = 1;
+    });
+}
+
 function goToEditRegister(){
     $(document).ready( function(){
         if(state == 0){
@@ -133,26 +138,33 @@ function goToRegisterOrListPet(){
 function goToSchedule(){
     $(document).ready( function(){
         if(state == 0){
-            $("#mutableContent").load("../html/schedule.html");
+            $("#mutableContent").load("../html/calendarioservicos.html");
             document.body.style.backgroundImage = "none";
         }else{
-            $("#mutableMiddleColumn").load("../html/colunameioschedule.html");
+            $("#mutableMiddleColumn").load("../html/colunameiocalendarioservicos.html");
         }
         state = 1;
     });
 }
+
+function goToFinalizeService(){
+    $("#mutableMiddleColumn").load("../html/colunameioschedule.html");
+    state = 1;
+}
 /*----------------------------------------------------------------------------*/
 function userCard(name, photo){
     $(document).ready( function(){
-        $("#mutableCard").load("../html/usercard.html");
-        console.log(name);
-        document.getElementById("personName").innerHTML = name;
+        $("#mutableCard").load("../html/usercard.html", function(){
+            $("#personName").html(name);
+        });
     });
 }
 
 function adminCard(name, photo){
     $(document).ready( function(){
-        $("#mutableCard").load("../html/admincard.html");
+        $("#mutableCard").load("../html/admincard.html", function(){
+            $("#personName").html(name);
+        });
     });
 }
 
@@ -177,6 +189,75 @@ function guestNavBar(){
 function adminNavBar(){
     $(document).ready( function(){
         $("#mutableNavBar").load("../html/adminnavbar.html");
+    });
+}
+/*----------------------------utilidades--------------------------------------*/
+function registerAdmin(){
+    $(document).ready( function(){
+        try{
+            var name = $("#name").val();
+            var login = $("#login").val();
+            var passWord = $("#passWord").val();
+            var passWord2 = $("#passWord2").val();
+            var address = $("#address").val();
+            var tel = $("#tel").val();
+            var email = $("#email").val();
+
+            if(name !== "" && login !== "" && passWord !== "" && passWord2 !== "" && address !== "" && tel !== "" && email !== ""){
+                if(passWord === passWord2){
+                    alert("Cadastro efetuado com sucesso");
+                }else{
+                    alert("Senhas diferem");
+                }
+            }else{
+                alert("É necessário preencher todos os campos!");
+            }
+            console.log(name);
+            console.log(login);
+            console.log(passWord);
+            console.log(passWord2);
+            console.log(address);
+            console.log(tel);
+            console.log(email);
+
+        }catch(err){
+            console.log(err.message);
+        }
+    });
+}
+
+function registerClient(){
+    $(document).ready( function(){
+        try{
+            var name = $("#name").val();
+            var login = $("#login").val();
+            var passWord = $("#passWord").val();
+            var passWord2 = $("#passWord2").val();
+            var address = $("#address").val();
+            var tel = $("#tel").val();
+            var email = $("#email").val();
+
+            if(name !== "" && login !== "" && passWord !== "" && passWord2 !== "" && address !== "" && tel !== "" && email !== ""){
+                if(passWord === passWord2){
+                    alert("Cadastro efetuado com sucesso");
+                }else{
+                    alert("Senhas diferem");
+                }
+            }else{
+                alert("É necessário preencher todos os campos!");
+            }
+
+            console.log(name);
+            console.log(login);
+            console.log(passWord);
+            console.log(passWord2);
+            console.log(address);
+            console.log(tel);
+            console.log(email);
+
+        }catch(err){
+            console.log(err.message);
+        }
     });
 }
 
