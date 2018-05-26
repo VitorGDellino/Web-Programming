@@ -1,6 +1,6 @@
 /*----------------FUNCOES RELACIONADAS A NAVEGACAO----------------------------*/
 state = 0;
-
+//window.location.reload(true)
 function goToHome(){
     $(document).ready( function(){
         document.body.style.backgroundImage = "url(./assets/background.png)";
@@ -114,10 +114,10 @@ function goToFinalizeBuy(){
 function goToEditRegister(){
     $(document).ready( function(){
         if(state == 0){
-            $("#mutableContent").load("../html/editregister.html");
+            $("#mutableContent").load("../html/edit.html");
             document.body.style.backgroundImage = "none";
         }else{
-            $("#mutableMiddleColumn").load("../html/colunameioeditregister.html");
+            $("#mutableMiddleColumn").load("../html/colunameioedit.html");
         }
         state = 1;
     });
@@ -126,10 +126,10 @@ function goToEditRegister(){
 function goToRegisterOrListPet(){
     $(document).ready( function(){
         if(state == 0){
-            $("#mutableContent").load("../html/registerorlistpet.html");
+            $("#mutableContent").load("../html/pet.html");
             document.body.style.backgroundImage = "none";
         }else{
-            $("#mutableMiddleColumn").load("../html/colunameioregorlistpet.html");
+            $("#mutableMiddleColumn").load("../html/colunameiopet.html");
         }
         state = 1;
     });
@@ -150,6 +150,55 @@ function goToSchedule(){
 function goToFinalizeService(){
     $("#mutableMiddleColumn").load("../html/colunameioschedule.html");
     state = 1;
+}
+
+function goToRegisterPet(){
+    $("#mutableMiddleColumn").load("../html/colunameiocadastraranimais.html");
+    state = 1;
+}
+
+function registerPet(){
+    $(document).ready( function(){
+        var petName = $("#petName").val();
+        var race = $("#race").val();
+        var age = $("#age").val();
+
+        console.log(petName);
+        console.log(race);
+        console.log(age);
+    });
+}
+
+function editProfile(){
+    $(document).ready(function(){
+        var newName = $("#newName").val();
+        var newLogin = $("#newLogin").val();
+        var oldPassWord = $("#oldPassWord").val();
+        var newPassWord = $("#newPassWord").val();
+        var newPassWord2 = $("#newPassWord2").val();
+        var newAdress = $("#newAdress").val();
+        var newTel = $("#newTel").val();
+        var newEmail = $("#newEmail").val();
+
+        if(newPassWord === newPassWord2){
+            if(newPassWord === oldPassWord && newPassWord !== ""){
+                alert("A senha deve ser distinta da anterior");
+            }else{
+                alert("Alteracao realizada com sucesso");
+            }
+        }else{
+            alert("Novas senhas diferem");
+        }
+
+        console.log(newName);
+        console.log(newLogin);
+        console.log(oldPassWord);
+        console.log(newPassWord);
+        console.log(newPassWord2);
+        console.log(newAdress);
+        console.log(newTel);
+        console.log(newEmail);
+    });
 }
 /*----------------------------------------------------------------------------*/
 function userCard(name, photo){
