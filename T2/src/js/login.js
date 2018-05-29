@@ -30,7 +30,7 @@ function goToServices(){
         }else{
             $("#mutableMiddleColumn").load("../html/colunameioservicos.html");
         }
-        state = 1
+        state = 1;
     });
 }
 
@@ -138,13 +138,18 @@ function goToRegisterOrListPet(){
 function goToSchedule(){
     $(document).ready( function(){
         if(state == 0){
-            $("#mutableContent").load("../html/calendarioservicos.html");
+            $("#mutableContent").load("../html/calendarioservicosescolherdia.html");
             document.body.style.backgroundImage = "none";
         }else{
-            $("#mutableMiddleColumn").load("../html/colunameiocalendarioservicos.html");
+            $("#mutableMiddleColumn").load("../html/colunaMeioCalendarioServicosEscolherDia.html");
         }
         state = 1;
     });
+}
+
+function goToSelectHour(){
+	$("#mutableMiddleColumn").load("../html/colunaMeioCalendarioServicosEscolherHorario.html");
+    state = 1;
 }
 
 function goToFinalizeService(){
@@ -154,6 +159,11 @@ function goToFinalizeService(){
 
 function goToRegisterPet(){
     $("#mutableMiddleColumn").load("../html/colunameiocadastraranimais.html");
+    state = 1;
+}
+
+function goToEditPet(){
+    $("#mutableMiddleColumn").load("../html/colunameioeditaranimais.html");
     state = 1;
 }
 
