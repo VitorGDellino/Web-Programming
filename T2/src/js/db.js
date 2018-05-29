@@ -91,9 +91,11 @@ $(document).ready(function(){
         var foto = $("#inputfoto").val();
         var usuario = $("#inputUsuario").val();
         var senha = $("#inputSenha").val();
-        var cpf = $("#inputCPF").val();
-        var isAdmin = $("#inputIsAdmin").val();
-        if (nome.length == 0 || foto.length == 0 || usuario.length == 0 || senha.length == 0 || cpf.length == 0 || isAdmin.length == 0) {
+        var endereco = $("#inputEndereco").val();
+        var telefone = $("#inputTelefone").val();
+        var email = $("#inputEmail").val();
+        if (nome.length == 0 || foto.length == 0 || usuario.length == 0 || senha.length == 0 || endereco.length == 0 || telefone.length == 0
+             || email.length == 0) {
             alert("Todos os campos devem ser preenchidos para um novo cadastro");
         } else {
             db.onsuccess = function(e) {
@@ -105,8 +107,10 @@ $(document).ready(function(){
                     foto: foto,
                     usuario: usuario,
                     senha: senha,
-                    cpf: cpf,
-                    isAdmin: isAdmin
+                    endereco: endereco,
+                    telefone: telefone,
+                    email: email,
+                    isAdmin: true
                 };
                 var request = store.add(cliente);
                 request.onsuccess = function(e) {
