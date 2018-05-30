@@ -1,5 +1,6 @@
 /*----------------FUNCOES RELACIONADAS A NAVEGACAO----------------------------*/
 state = 0;
+loggedUser = "";
 //window.location.reload(true)
 function goToHome(){
     $(document).ready( function(){
@@ -169,9 +170,33 @@ function goToEditPet(){
 
 function registerPet(){
     $(document).ready( function(){
-        var petName = $("#petName").val();
-        var race = $("#race").val();
-        var age = $("#age").val();
+        console.log("entrou pet");
+        try {
+            var petName = $("#petName").val();
+            var race = $("#race").val();
+            var age = $("#age").val();
+            if (petName !== "" && race !== "" && age !== "") {
+                var request = indexedDB.open("petshop", 3);
+                request.onsuccess = function(e) {
+                    var db = e.target.result;
+                    var transaction = db.transaction(["Animais"], "readwrite");
+                    var store = transaction.objectStore("Animais");
+                    var pet = {
+                        login: loggedUser,
+                        petName: petName,
+                        race: race,
+                        age: age
+                    };
+                    var add = store.add(pet);
+                    add.onsuccess = function(e){
+                        console.log("cadastrou bunito");
+                    }
+                    db.close();
+                }
+            }
+        } catch(err) {
+            console.log(err.message);
+        }
 
         console.log(petName);
         console.log(race);
@@ -352,6 +377,7 @@ function userLogin(){
     try{
         var userName = document.getElementById("login").elements.namedItem("userName").value;
         var passWord = document.getElementById("login").elements.namedItem("passWord").value;
+        loggedUser = userName;
 
         console.log(userName);
         console.log(passWord);
@@ -370,7 +396,6 @@ function userLogin(){
 
     }catch(err){
         console.log(err.message);
-
     }
 }
 
