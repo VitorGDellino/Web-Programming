@@ -2,28 +2,26 @@
 //servicos: id, nome, dia, horario, preco, estaDisponivel, nomeDoAnimal
 //cliente: nome, foto, usuario, senha, cpf, isAdmin
 //animais: id, nomeDoAnimal, foto, usuarioDoDono, raca, idade, tipoDeAnimal, servico que esteja recebendo, custo total dos servicos
+$(document).ready( function(){
+    var request = indexedDB.open("petshop", 3);
 
+    console.log("veio aqui");
 
-$(document).ready(function(){
-    //Checar se a plataforma suporta IndexedDB
-    // if ((return "indexedDB" in window && !/iPad|iPhone|iPod/.test(navigator.platform))) {
-    //     return;
-    // }
+    request.onupgradeneeded = function(event) {
+        var db = event.target.result;
 
-    var db = indexedDB.open("db", 1);
-
-    db.onupgradeneeded = function(e) {
-        db = e.target.result;
-        db.createObjectStore("Estoque");
-        db.createObjectStore("Servicos");
-        db.createObjectStore("Clientes");
-        db.createObjectStore("Animais");
+        var users = db.createObjectStore("Usuarios", {keyPath: "login"});
+        var stock = db.createObjectStore("Estoque", {keyPath: "id", autoIncrement: true});
+        var services = db.createObjectStore("Servicos", {keyPath: "id", autoIncrement: true});
+        var pet = db.createObjectStore("Animais", {keyPath: "login"});
         console.log("criou o bd :D");
-    }
 
-
-
+        db.close();
+    };
 });
+
+
+
 
 //
 //     $("#cadastrarProduto").click(function(){ //FUNCAO CHAMADA PELO BOTAO DE CADASTRAR UM NOVO PRODUTO NO ESTOQUE
@@ -68,7 +66,7 @@ $(document).ready(function(){
 //             alert("Todos os campos devem ser preenchidos para um novo cadastro");
 //         } else {
 //             db.onsuccess = function (e) {
-//                 db = e.target.result;
+//                 db =db e.target.result;
 //                 transaction = db.transaction(["Servicos"], "readwrite");
 //                 var store = transaction.objectStore("Servicos");
 //                 servico = {
