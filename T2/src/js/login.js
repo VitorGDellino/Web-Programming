@@ -296,15 +296,44 @@ function registerClient(){
             var tel = $("#tel").val();
             var email = $("#email").val();
 
+            var db = window.IndexedDB.open("db", 1);
+
             if(name !== "" && login !== "" && passWord !== "" && passWord2 !== "" && address !== "" && tel !== "" && email !== ""){
                 if(passWord === passWord2){
                     alert("Cadastro efetuado com sucesso");
+                    console.log("entrou aqui");
+                    db.onsuccess = function(e) {
+                        db = e.target.result;
+                        transaction = db.transaction(["Clientes"], "readwrite");
+                        var store = transaction.objectStore("Clientes");
+                        var cliente = {
+                            name: name,
+                            // foto: foto,
+                            login: login,
+                            passWord: passWord,
+                            address: address,
+                            tel: tel,
+                            email: email,
+                            isAdmin: false
+                        };
+                        var request = store.add(cliente);
+                        request.onsuccess = function(e) {
+                            console.log("cadastro realizado com sucesso :D");
+                            //VOLTAR PARA TELA INICIAL
+                        }
+                        request.onerror = function(e) {
+                            alert("Ocorreu um erro!");
+                            console.log(e);
+                        }
+                    }
                 }else{
                     alert("Senhas diferem");
                 }
             }else{
                 alert("É necessário preencher todos os campos!");
             }
+
+            db.close();
 
             console.log(name);
             console.log(login);
