@@ -1,5 +1,20 @@
 /*----------------FUNCOES RELACIONADAS A NAVEGACAO----------------------------*/
 state = 0;
+
+$(document).ready(function(){
+	var dbOpenRequest = indexedDB.open("db", 1);
+
+	dbOpenRequest.onupgradeneeded = function(e) {
+		db = dbOpenRequest.result;
+		db = e.target.result;
+		db.createObjectStore("Estoque");
+		db.createObjectStore("Servicos");
+		db.createObjectStore("Clientes");
+		db.createObjectStore("Animais");
+		console.log("criou o bd :D");
+	}
+});
+
 //window.location.reload(true)
 function goToHome(){
     $(document).ready( function(){
@@ -296,36 +311,42 @@ function registerClient(){
             var tel = $("#tel").val();
             var email = $("#email").val();
 
-            var db = window.IndexedDB.open("db", 1);
-
+            dbOpenRequest = window.IndexedDB.open("db", 1);
+			
             if(name !== "" && login !== "" && passWord !== "" && passWord2 !== "" && address !== "" && tel !== "" && email !== ""){
                 if(passWord === passWord2){
                     alert("Cadastro efetuado com sucesso");
                     console.log("entrou aqui");
-                    db.onsuccess = function(e) {
-                        db = e.target.result;
-                        transaction = db.transaction(["Clientes"], "readwrite");
-                        var store = transaction.objectStore("Clientes");
-                        var cliente = {
-                            name: name,
-                            // foto: foto,
-                            login: login,
-                            passWord: passWord,
-                            address: address,
-                            tel: tel,
-                            email: email,
-                            isAdmin: false
-                        };
-                        var request = store.add(cliente);
-                        request.onsuccess = function(e) {
-                            console.log("cadastro realizado com sucesso :D");
-                            //VOLTAR PARA TELA INICIAL
-                        }
-                        request.onerror = function(e) {
-                            alert("Ocorreu um erro!");
-                            console.log(e);
-                        }
-                    }
+					dbOpenRequest.onupgradeneeded = function(e) {
+						db = dbOpenRequest.result;
+						db.onsuccess = function(e) {
+							console.log("entrou DBSucesso");
+						db = e.target.result;
+						var transaction = db.transaction(["Clientes"], "readwrite");
+						var store = transaction.objectStore("Clientes");
+						var cliente = {
+							name: name,
+							// foto: foto,
+							login: login,
+							passWord: passWord,
+							address: address,
+							tel: tel,
+							email: email,
+							isAdmin: false
+						};
+						var request = store.add(cliente);
+						request.onsuccess = function(e) {
+							console.log("cadastro realizado com sucesso :D");
+							//VOLTAR PARA TELA INICIAL
+						}
+							request.onerror = function(e) {
+								alert("Ocorreu um erro!");
+								console.log(e);
+							}
+						 }
+						
+						db.close();
+					}
                 }else{
                     alert("Senhas diferem");
                 }
@@ -333,7 +354,7 @@ function registerClient(){
                 alert("É necessário preencher todos os campos!");
             }
 
-            db.close();
+            // db.close();
 
             console.log(name);
             console.log(login);
@@ -344,7 +365,7 @@ function registerClient(){
             console.log(email);
 
         }catch(err){
-            console.log(err.message);
+			console.log(err.message);
         }
     });
 }
