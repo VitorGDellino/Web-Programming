@@ -215,16 +215,95 @@ function editProfile(){
         var newAdress = $("#newAdress").val();
         var newTel = $("#newTel").val();
         var newEmail = $("#newEmail").val();
+        var isAdmin = false;
 
-        if(newPassWord === newPassWord2){
-            if(newPassWord === oldPassWord && newPassWord !== ""){
-                alert("A senha deve ser distinta da anterior");
-            }else{
-                alert("Alteracao realizada com sucesso");
-            }
-        }else{
-            alert("Novas senhas diferem");
-        }
+
+
+        var request = indexedDB.open("petshop", 3);
+
+        request.onsuccess = function(event){
+            var db = event.target.result;
+
+            var transaction = db.transaction(["Usuarios"], "readwrite");
+
+            var store = transaction.objectStore("Usuarios");
+
+            var get = store.get(loggedUser);
+
+
+            get.onsuccess = function(e){
+                var result = e.target.result;
+
+
+                if(typeof result !== "undefined"){
+                    if(newName === ""){
+                        newName = result.name;
+                    }
+
+                    /*Estou pensando em tirar isso pqe vai complicar demais poder mudar a chave, mas preciso pesquisar ainda*/
+                    /*if(newLogin === ""){
+                        newLogin = result.login;
+
+                    }*/
+
+                    if(newPassWord === "" && newPassWord2 === ""){
+                        newPassWord = result.passWord;
+                    }
+
+                    if(newAdress === ""){
+                        newAdress = result.address;
+                    }
+
+                    if(newTel === ""){
+                        newTel = result.tel;
+                    }
+
+                    if(newEmail === ""){
+                        newEmail = result.email;
+                    }
+
+                    isAdmin = result.isAdmin;
+                }
+
+                console.log(newName);
+                console.log(newLogin);
+                console.log(newPassWord);
+                console.log(newAdress);
+                console.log(newTel);
+                console.log(newEmail);
+                console.log(isAdmin);
+
+                var user = {
+                    name: newName,
+                    login: loggedUser,
+                    passWord: newPassWord,
+                    address: newAdress,
+                    tel: newTel,
+                    email: newEmail,
+                    isAdmin: isAdmin
+                };
+
+                if(newPassWord === newPassWord2){
+                    if(newPassWord === oldPassWord && newPassWord !== ""){
+                        alert("A senha deve ser distinta da anterior");
+                    }else{
+                        var update = store.put(user);
+
+                        update.onsuccess = function(){
+                            console.log("alterou bunito");
+                        }
+
+                        alert("Alteracao realizada com sucesso");
+                    }
+                }else{
+                    alert("Novas senhas diferem");
+                }
+            };
+
+            db.close();
+        };
+
+
     });
 }
 /*----------------------------------------------------------------------------*/

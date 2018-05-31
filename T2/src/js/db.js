@@ -15,7 +15,6 @@ $(document).ready( function(){
         var services = db.createObjectStore("Servicos", {keyPath: "id", autoIncrement: true});
         var pet = db.createObjectStore("Animais", {keyPath: "login"});
 
-        db.close();
     };
 
     request.onsuccess = function(event){
