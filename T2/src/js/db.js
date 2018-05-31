@@ -15,12 +15,7 @@ $(document).ready( function(){
         var services = db.createObjectStore("Servicos", {keyPath: "id", autoIncrement: true});
         var pet = db.createObjectStore("Animais", {keyPath: "login"});
 
-    };
-
-    request.onsuccess = function(event){
-        var db = event.target.result;
-
-        var transaction = db.transaction(["Usuarios"], "readwrite");
+        var transaction = event.target.transaction;
 
         var store = transaction.objectStore("Usuarios");
 
@@ -36,165 +31,92 @@ $(document).ready( function(){
 
         var add = store.add(user);
 
-        add.onsuccess = function(e){
-            console.log("cadastrou bunito");
+        store = transaction.objectStore("Servicos");
+
+        var service = {
+            name: "Banho",
+            descricao: "Lavagem de animais",
+            preco: 59.99
+        };
+
+        add = store.add(service);
+
+        service = {
+            name: "Tosa",
+            descricao: "Tosa de animais",
+            preco: 25.99
+        };
+
+        add = store.add(service);
+
+        service = {
+            name: "Veterinario de plantao",
+            descricao: "Checar a disponibilidade de um veterinario",
+            preco: 89.99
+        };
+
+        add = store.add(service);
+
+        service = {
+            name: "Adestramento",
+            descricao: "Serviço de adestramento de animais",
+            preco: 150
+        };
+
+        add = store.add(service);
+
+        service = {
+            name: "Loja física",
+            descricao: "Checar localizacao de nossas lojas",
+            preco: 0
+        };
+
+        add = store.add(service);
+
+        store = transaction.objectStore("Estoque");
+
+        var product = {
+            name: "Comida de cachorro",
+            descricao: "Saco de ração de cachorro",
+            preco: 49.99,
+            qtd_estoque: 150,
+            qtd_vendida: 20
         }
 
-        db.close()
+        add = store.add(product);
+
+        product = {
+            name: "Comida de gato",
+            descricao: "Saco de ração de gato",
+            preco: 39.99,
+            qtd_estoque: 190,
+            qtd_vendida: 10
+        }
+
+        add = store.add(product);
+
+        product = {
+            name: "Casinha",
+            descricao: "Casinha para animais de médio porte",
+            preco: 99.90,
+            qtd_estoque: 25,
+            qtd_vendida: 3
+        }
+
+        add = store.add(product);
+
+        product = {
+            name: "Brinquedo de cachorro",
+            descricao: "Osso de brinquedo para cachorro",
+            preco: 19.90,
+            qtd_estoque: 150,
+            qtd_vendida: 89
+        }
+
+        add = store.add(product);
+
+        console.log("BD atualizado");
+
+        db.close();
     };
 });
-
-
-
-
-//
-//     $("#cadastrarProduto").click(function(){ //FUNCAO CHAMADA PELO BOTAO DE CADASTRAR UM NOVO PRODUTO NO ESTOQUE
-//         var nome = $("#inputNome").val();
-//         var preco = $("#inputPreco").val();
-//         var quantidadeRestante = $("#inputQuantidadeRestante").val();
-//         var quantidadeVendidas = $("#inputQuantidadeVendidas").val();
-//         if (nome.length == 0 || preco.length == 0 || quantidadeRestante.length == 0 || quantidadeVendidas.length == 0) {
-//             alert("Todos os campos devem ser preenchidos para um novo cadastro");
-//         } else {
-//             db.onsuccess = function(e) {
-//                 db = e.target.result;
-//                 transaction = db.transaction(["Estoque"], "readwrite");
-//                 var store = transaction.objectStore("Estoque");
-//                 var produto = {
-//                     nome: nome,
-//                     preco: preco,
-//                     quantidadeRestante: quantidadeRestante,
-//                     quantidadeVendidas: quantidadeVendidas
-//                 };
-//                 var request = store.add(produto);
-//                 request.onsuccess = function(e) {
-//                     console.log("cadastro realizado com sucesso :D");
-//                     //VOLTAR PARA TELA INICIAL
-//                 }
-//                 request.onerror = function(e) {
-//                     alert("Ocorreu um erro!");
-//                     console.log(e);
-//                 }
-//                 db.close();
-//             }
-//         }
-//     });
-//     $("cadastrarServico").click(function(){
-//         var nome = $("#inputNome").val();
-//         var dia = $("#inputDia").val();
-//         var horario = $("#inputHorario").val();
-//         var preco = $("#inputPreco").val();
-//         var estaDisponivel = $("#inputEstaDisponivel").val();
-//         var nomeDoAnimal = $("#inputNomeDoAnimal").val();
-//         if (nome.length == 0 || dia.length == 0 || horario.length == 0 || preco.length == 0 || estaDisponivel.length == 0 || nomeDoAnimal.length == 0) {
-//             alert("Todos os campos devem ser preenchidos para um novo cadastro");
-//         } else {
-//             db.onsuccess = function (e) {
-//                 db =db e.target.result;
-//                 transaction = db.transaction(["Servicos"], "readwrite");
-//                 var store = transaction.objectStore("Servicos");
-//                 servico = {
-//                     nome: nome,
-//                     dia: dia,
-//                     horario: horario,
-//                     preco: preco,
-//                     estaDisponivel: estaDisponivel,
-//                     nomeDoAnimal: nomeDoAnimal
-//                 };
-//                 var request = store.add(servico);
-//                 request.onsuccess = function(e) {
-//                     console.log("cadastro do servico realizado com sucesso :D");
-//                     //VOLTAR PARA TELA INICIAL
-//                 }
-//                 request.onerror = function(e) {
-//                     alert("Ocorreu um erro!");
-//                     console.log(e);
-//                 }
-//                 db.close();
-//             }
-//         }
-//     });
-//     $("#cadastrarCliente").click(function(){ //FUNCAO CHAMADA PELO BOTAO DE CADASTRAR UM NOVO CLIENTE
-//         var name = $("#name").val();
-//         // var foto = $("#foto").val();
-//         var login = $("#login").val();
-//         var passWord = $("#passWord").val();
-//         var address = $("#address").val();
-//         var tel = $("#tel").val();
-//         var email = $("#email").val();
-//         if (name.length == 0 || login.length == 0 || passWord.length == 0 || address.length == 0 || tel.length == 0
-//              || email.length == 0) {
-//             alert("Todos os campos devem ser preenchidos para um novo cadastro");
-//         } else {
-//             console.log("entrou aqui");
-//             db.onsuccess = function(e) {
-//                 db = e.target.result;
-//                 transaction = db.transaction(["Clientes"], "readwrite");
-//                 var store = transaction.objectStore("Clientes");
-//                 var cliente = {
-//                     name: name,
-//                     // foto: foto,
-//                     login: login,
-//                     passWord: passWord,
-//                     address: address,
-//                     tel: tel,
-//                     email: email,
-//                     isAdmin: false
-//                 };
-//                 var request = store.add(cliente);
-//                 request.onsuccess = function(e) {
-//                     console.log("cadastro realizado com sucesso :D");
-//                     //VOLTAR PARA TELA INICIAL
-//                 }
-//                 request.onerror = function(e) {
-//                     alert("Ocorreu um erro!");
-//                     console.log(e);
-//                 }
-//                 db.close();
-//             }
-//         }
-//     });
-//     $("#cadastrarAnimal").click(function(){ //FUNCAO CHAMADA PELO BOTAO DE CADASTRAR UM NOVO CLIENTE
-//         var nome = $("#inputNome").val();
-//         var foto = $("#inputfoto").val();
-//         var usuarioDono = $("#inputUsuarioDono").val();
-//         var raca = $("#inputRaca").val();
-//         var idade = $("#inputIdade").val();
-//         var tipoDeAnimal = $("#inputTipoDeAnimal").val();
-//         var servicosRecebidos = $("#inputServicosRecebidos").val();
-//         var custoTotalServicos = $("#inputCustoTotalServicos").val();
-//
-//         if (nome.length == 0 || foto.length == 0 || usuarioDono.length == 0 || raca.length == 0 || idade.length == 0 ||
-//              tipoDeAnimal.length == 0 || servicosRecebidos.length == 0 || custoTotalServicos.length == 0) {
-//             alert("Todos os campos devem ser preenchidos para um novo cadastro");
-//         } else {
-//             db.onsuccess = function(e) {
-//                 db = e.target.result;
-//                 transaction = db.transaction(["Animais"], "readwrite");
-//                 var store = transaction.objectStore("Animais");
-//                 var animal = {
-//                     nome: nome,
-//                     foto: foto,
-//                     usuarioDono: usuarioDono,
-//                     raca: raca,
-//                     idade: idade,
-//                     tipoDeAnimal: tipoDeAnimal,
-//                     servicosRecebidos: servicosRecebidos,
-//                     custoTotalServicos: custoTotalServicos
-//                 };
-//                 var request = store.add(animal);
-//                 request.onsuccess = function(e) {
-//                     console.log("cadastro realizado com sucesso :D");
-//                     //VOLTAR PARA TELA INICIAL
-//                 }
-//                 request.onerror = function(e) {
-//                     alert("Ocorreu um erro!");
-//                     console.log(e);
-//                 }
-//                 db.close();
-//             }
-//         }
-//     });
-//
-//
-// });

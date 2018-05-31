@@ -77,6 +77,7 @@ function goToServiceManager(){
             $("#mutableMiddleColumn").load("../html/colunameioservicesmanager.html");
         }
 
+        listServices();
         state = 1;
     });
 }
@@ -89,6 +90,7 @@ function goToStockManager(){
         }else{
             $("#mutableMiddleColumn").load("../html/colunameiostockmanager.html");
         }
+        listStock();
         state = 1;
     });
 }
@@ -217,8 +219,6 @@ function editProfile(){
         var newEmail = $("#newEmail").val();
         var isAdmin = false;
 
-
-
         var request = indexedDB.open("petshop", 3);
 
         request.onsuccess = function(event){
@@ -264,14 +264,6 @@ function editProfile(){
 
                     isAdmin = result.isAdmin;
                 }
-
-                console.log(newName);
-                console.log(newLogin);
-                console.log(newPassWord);
-                console.log(newAdress);
-                console.log(newTel);
-                console.log(newEmail);
-                console.log(isAdmin);
 
                 var user = {
                     name: newName,
@@ -347,6 +339,102 @@ function adminNavBar(){
     });
 }
 /*----------------------------utilidades--------------------------------------*/
+
+//falta inserir foto
+function changeHMTL(table, n, id){
+
+    if(id === "#estoque"){
+        var eachline = "<tr><th>Id</th><th>Nome</th><th>Descrição</th><th>Preço</th><th>Quantidade em estoque</th><th>Quantidade vendida</th></tr>";
+        for(i=0; i<n; i++){
+            eachline += "<tr><td>"+ table[i].id.toString()+"</td><td>"+ table[i].name+"</td><td>"+table[i].descricao+"</td><td>"+table[i].preco.toString()+"</td><td>"+table[i].qtd_estoque.toString()+"</td><td>"+table[i].qtd_vendida.toString()+"</td></tr>";
+        }
+    }else{
+        var eachline = "<tr><th>Id</th><th>Nome</th><th>Descrição</th><th>Preço</th></tr>";
+        for(i=0; i<n; i++){
+            eachline += "<tr><td>"+ table[i].id.toString()+"</td><td>"+ table[i].name+"</td><td>"+table[i].descricao+"</td><td>"+table[i].preco.toString()+"</td></tr>";
+        }
+    }
+
+    $(id).html(eachline);
+}
+
+function listStock(){
+    $(document).ready( function(){
+        try{
+
+            var n = 0;
+            var table;
+            var request = indexedDB.open("petshop", 3);
+
+            console.log("estoque");
+
+            request.onsuccess = function(event){
+                var db = event.target.result;
+
+                var transaction = db.transaction(["Estoque"], "readwrite");
+
+                var store = transaction.objectStore("Estoque");
+
+                var count = store.count();
+
+                count.onsuccess = function(){
+                    n = count.result;
+                };
+
+                var getAll = store.getAll();
+
+                getAll.onsuccess = function(e){
+                    table = e.target.result;
+                    changeHMTL(table, n, "#estoque");
+                };
+
+                db.close();
+            };
+
+        }catch(err){
+            console.log(err.message);
+        }
+    });
+}
+
+function listServices(){
+    $(document).ready( function(){
+        try{
+
+            var n = 0;
+            var table;
+            var request = indexedDB.open("petshop", 3);
+
+            request.onsuccess = function(event){
+                var db = event.target.result;
+
+                var transaction = db.transaction(["Servicos"], "readwrite");
+
+                var store = transaction.objectStore("Servicos");
+
+                var count = store.count();
+
+                count.onsuccess = function(){
+                    n = count.result;
+                };
+
+                var getAll = store.getAll();
+
+                getAll.onsuccess = function(e){
+                    table = e.target.result;
+                    changeHMTL(table, n, "#servicos");
+                };
+
+                db.close();
+            };
+
+        }catch(err){
+            console.log(err.message);
+        }
+    });
+}
+
+
 function registerAdmin(){
     $(document).ready( function(){
         try{
