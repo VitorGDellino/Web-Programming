@@ -379,6 +379,7 @@ function userLogin(){
     try{
         var userName = document.getElementById("login").elements.namedItem("userName").value;
         var passWord = document.getElementById("login").elements.namedItem("passWord").value;
+        loggedUser = userName;
 
         console.log(userName);
         console.log(passWord);
@@ -398,9 +399,8 @@ function userLogin(){
 
                 if(typeof result !== "undefined"){
                     if(result.login === userName && result.passWord === passWord){
-                        adminNavBar();
-                        adminCard(userName, "");
-                        console.log("WELCOME LORD");
+                        userNavBar();
+                        userCard(userName, "");
                     }else{
                         alert("Senha inválida");
                     }
@@ -415,7 +415,6 @@ function userLogin(){
 
     }catch(err){
         console.log(err.message);
-
     }
 }
 
