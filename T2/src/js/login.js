@@ -131,7 +131,7 @@ function goToRegisterOrListPet(){
         if(state == 0){
             $("#mutableContent").load("../html/pet.html");
             document.body.style.backgroundImage = "none";
-        }else{
+        }else{	
             $("#mutableMiddleColumn").load("../html/colunameiopet.html");
         }
         state = 1;
@@ -148,6 +148,17 @@ function goToSchedule(){
         }
         state = 1;
     });
+}
+
+function goToRegisterService(){
+	console.log("Vaitomarnocu");
+	$("#mutableMiddleColumn").load("../html/colunameiocadastrarservico.html");
+    state = 1;
+}
+
+function goToRegisterProduct(){
+	$("#mutableMiddleColumn").load("../html/colunameiocadastrarprodutos.html");
+    state = 1;
 }
 
 function goToSelectHour(){
@@ -539,6 +550,100 @@ function registerClient(){
         }catch(err){
 			console.log(err.message);
         }
+    });
+}
+
+function registerProduct(){
+    $(document).ready( function(){
+        try{
+            var name = $("#productName").val();
+            var descricao = $("#descricao").val();
+            var price = $("#price").val();
+            var stock = $("#stock").val();
+            var sold = $("#sold").val();
+
+            if(name !== "" && descricao !== "" && price !== "" && stock !== "" && sold !== ""){
+
+				var request = indexedDB.open("petshop", 3);
+
+				request.onsuccess = function(event){
+					var db = event.target.result;
+
+					var transaction = db.transaction(["Estoque"], "readwrite");
+
+					var store = transaction.objectStore("Estoque");
+
+					var product = {
+						name: name,
+						descricao: descricao,
+						price: price,
+						stock: stock,
+						sold: sold,
+					};
+
+					var add = store.add(product);
+
+					add.onsuccess = function(e){
+						console.log("cadastrou bunito");
+					};
+
+
+					db.close()
+				};
+				
+            }else{
+                alert("É necessário preencher todos os campos!");
+            }
+        }catch(err){
+			console.log(err.message);
+        }
+		$("#mutableMiddleColumn").load("../html/colunameiostockmanager.html");
+        state = 1;
+    });
+}
+
+function registerService(){
+    $(document).ready( function(){
+        try{
+            var name = $("#productName").val();
+            var descricao = $("#descricao").val();
+            var price = $("#price").val();
+
+            if(name !== "" && descricao !== "" && price !== ""){
+
+				var request = indexedDB.open("petshop", 3);
+
+				request.onsuccess = function(event){
+					var db = event.target.result;
+
+					var transaction = db.transaction(["Servicos"], "readwrite");
+
+					var store = transaction.objectStore("Servicos");
+
+					var service = {
+						name: name,
+						descricao: descricao,
+						price: price,
+					};
+
+					var add = store.add(service);
+
+					add.onsuccess = function(e){
+						console.log("cadastrou bunito");
+					};
+
+
+					db.close()
+				};
+				
+            }else{
+                alert("É necessário preencher todos os campos!");
+            }
+        }catch(err){
+			console.log(err.message);
+        }
+        $("#mutableMiddleColumn").load("../html/colunameioservicesmanager.html");
+        state = 1;
     });
 }
 
