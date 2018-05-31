@@ -148,6 +148,11 @@ function goToSchedule(){
     });
 }
 
+function goToRegisterProduct(){
+	$("#mutableMiddleColumn").load("../html/colunameiocadastrarprodutos.html");
+    state = 1;
+}
+
 function goToSelectHour(){
 	$("#mutableMiddleColumn").load("../html/colunaMeioCalendarioServicosEscolherHorario.html");
     state = 1;
