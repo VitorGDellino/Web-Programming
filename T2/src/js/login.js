@@ -131,7 +131,7 @@ function goToRegisterOrListPet(){
         if(state == 0){
             $("#mutableContent").load("../html/pet.html");
             document.body.style.backgroundImage = "none";
-        }else{	
+        }else{
             $("#mutableMiddleColumn").load("../html/colunameiopet.html");
         }
         state = 1;
@@ -353,6 +353,8 @@ function adminNavBar(){
 
 //falta inserir foto
 function changeHMTL(table, n, id){
+    console.log(table);
+    console.log(n)
 
     if(id === "#estoque"){
         var eachline = "<tr><th>Id</th><th>Nome</th><th>Descrição</th><th>Preço</th><th>Quantidade em estoque</th><th>Quantidade vendida</th></tr>";
@@ -576,9 +578,9 @@ function registerProduct(){
 					var product = {
 						name: name,
 						descricao: descricao,
-						price: price,
-						stock: stock,
-						sold: sold,
+						preco: Number(price),
+						qtd_estoque: Number(stock),
+						qtd_vendida: Number(sold),
 					};
 
 					var add = store.add(product);
@@ -590,15 +592,14 @@ function registerProduct(){
 
 					db.close()
 				};
-				
+
             }else{
                 alert("É necessário preencher todos os campos!");
             }
+            goToStockManager();
         }catch(err){
 			console.log(err.message);
         }
-		$("#mutableMiddleColumn").load("../html/colunameiostockmanager.html");
-        state = 1;
     });
 }
 
@@ -623,7 +624,7 @@ function registerService(){
 					var service = {
 						name: name,
 						descricao: descricao,
-						price: price,
+						preco: Number(price),
 					};
 
 					var add = store.add(service);
@@ -635,15 +636,14 @@ function registerService(){
 
 					db.close()
 				};
-				
+
+                goToServiceManager();
             }else{
                 alert("É necessário preencher todos os campos!");
             }
         }catch(err){
 			console.log(err.message);
         }
-        $("#mutableMiddleColumn").load("../html/colunameioservicesmanager.html");
-        state = 1;
     });
 }
 
