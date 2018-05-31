@@ -1,6 +1,7 @@
 /*----------------FUNCOES RELACIONADAS A NAVEGACAO----------------------------*/
 state = 0;
-//window.location.reload(true)
+loggedUser = "";
+//window.location.reload(true);
 function goToHome(){
     $(document).ready( function(){
         document.body.style.backgroundImage = "url(./assets/background.png)";
@@ -45,7 +46,7 @@ function goToAbout(){
 function goToAdminRegister(){
     $(document).ready( function(){
         if(state == 0){
-            $("#mutableContent").load("../html/adminregister.html");
+            $("#mutableContent").load("../html/admregister.html");
             document.body.style.backgroundImage = "none";
         }else{
             $("#mutableMiddleColumn").load("../html/colunameioadminregister.html");
@@ -169,15 +170,40 @@ function goToEditPet(){
 
 function registerPet(){
     $(document).ready( function(){
-        var petName = $("#petName").val();
-        var race = $("#race").val();
-        var age = $("#age").val();
+        console.log("entrou pet");
+        try {
+            var petName = $("#petName").val();
+            var race = $("#race").val();
+            var age = $("#age").val();
+            if (petName !== "" && race !== "" && age !== "") {
+                var request = indexedDB.open("petshop", 3);
+                request.onsuccess = function(e) {
+                    var db = e.target.result;
+                    var transaction = db.transaction(["Animais"], "readwrite");
+                    var store = transaction.objectStore("Animais");
+                    var pet = {
+                        login: loggedUser,
+                        petName: petName,
+                        race: race,
+                        age: age
+                    };
+                    var add = store.add(pet);
+                    add.onsuccess = function(e){
+                        console.log("cadastrou bunito");
+                    }
+                    db.close();
+                }
+            }
+        } catch(err) {
+            console.log(err.message);
+        }
 
         console.log(petName);
         console.log(race);
         console.log(age);
     });
 }
+
 
 function editProfile(){
     $(document).ready(function(){
@@ -332,7 +358,8 @@ function registerClient(){
 
 						add.onsuccess = function(e){
 							console.log("cadastrou bunito");
-						}
+						};
+
 
 						db.close()
 					};
@@ -356,17 +383,35 @@ function userLogin(){
         console.log(userName);
         console.log(passWord);
 
-        //FAREI UMA PESQUISA NO BANCO DE DADOS DEPOIS
-        var user = "Vitor"; // TODO 1: buscar usuário
-        var pass = "1234"; // TODO 2: buscar senha
+        var request = indexedDB.open("petshop", 3);
 
-        if(user === userName && pass === passWord){
-            userNavBar();
-            userCard(user, "");
-            console.log("LOGIN efetuado com sucesso");
-        }else{
-            alert("Usuário ou senha incorreto(s)!");
-        }
+        request.onsuccess = function(event){
+            request = event.target.result;
+
+            var transaction = request.transaction(["Usuarios"], "readonly");
+            var store = transaction.objectStore("Usuarios");
+
+            var get = store.get(userName);
+
+            get.onsuccess = function(e){
+                var result = e.target.result;
+
+                if(typeof result !== "undefined"){
+                    if(result.login === userName && result.passWord === passWord){
+                        adminNavBar();
+                        adminCard(userName, "");
+                        console.log("WELCOME LORD");
+                    }else{
+                        alert("Senha inválida");
+                    }
+                }else{
+                    alert("Usuário inválido!");
+                }
+
+            };
+
+            request.close();
+        };
 
     }catch(err){
         console.log(err.message);
@@ -382,17 +427,35 @@ function adminLogin(){
         console.log(userName);
         console.log(passWord);
 
-        //FAREI UMA PESQUISA NO BANCO DE DADOS DEPOIS
-        var user = "Vitor"; // TODO 1: buscar usuário
-        var pass = "1234"; // TODO 2: buscar senha
+        var request = indexedDB.open("petshop", 3);
 
-        if(user === userName && pass === passWord){
-            adminNavBar();
-            adminCard(user, "");
-            console.log("WELCOME LORD");
-        }else{
-            alert("YOU SHALL NOT PASS!!");
-        }
+        request.onsuccess = function(event){
+            request = event.target.result;
+
+            var transaction = request.transaction(["Usuarios"], "readonly");
+            var store = transaction.objectStore("Usuarios");
+
+            var get = store.get(userName);
+
+            get.onsuccess = function(e){
+                var result = e.target.result;
+
+                if(typeof result !== "undefined"){
+                    if(result.login === userName && result.passWord === passWord && result.isAdmin){
+                        adminNavBar();
+                        adminCard(userName, "");
+                        console.log("WELCOME LORD");
+                    }else{
+                        alert("VOCE NÃO É UM ADMIN!!");
+                    }
+                }else{
+                    alert("Usuário inválido!");
+                }
+
+            };
+
+            request.close();
+        };
 
     }catch(err){
         console.log(err.message);

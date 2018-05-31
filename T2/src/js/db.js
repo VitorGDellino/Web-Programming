@@ -5,7 +5,7 @@
 $(document).ready( function(){
     var request = indexedDB.open("petshop", 3);
 
-    console.log("veio aqui");
+    console.log("Veio aqui");
 
     request.onupgradeneeded = function(event) {
         var db = event.target.result;
@@ -14,9 +14,34 @@ $(document).ready( function(){
         var stock = db.createObjectStore("Estoque", {keyPath: "id", autoIncrement: true});
         var services = db.createObjectStore("Servicos", {keyPath: "id", autoIncrement: true});
         var pet = db.createObjectStore("Animais", {keyPath: "login"});
-        console.log("criou o bd :D");
 
         db.close();
+    };
+
+    request.onsuccess = function(event){
+        var db = event.target.result;
+
+        var transaction = db.transaction(["Usuarios"], "readwrite");
+
+        var store = transaction.objectStore("Usuarios");
+
+        var user = {
+            name: "Vitor",
+            login: "Vitor",
+            passWord: "1234",
+            address: "AV 3",
+            tel: 38070477,
+            email: "vitor.dellinocente@usp.br",
+            isAdmin: true
+        };
+
+        var add = store.add(user);
+
+        add.onsuccess = function(e){
+            console.log("cadastrou bunito");
+        }
+
+        db.close()
     };
 });
 
