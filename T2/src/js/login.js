@@ -1,6 +1,7 @@
 /*----------------FUNCOES RELACIONADAS A NAVEGACAO----------------------------*/
 state = 0;
 loggedUser = "";
+pet_id = 0;
 //window.location.reload(true);
 function goToHome(){
     $(document).ready( function(){
@@ -134,6 +135,7 @@ function goToRegisterOrListPet(){
         }else{
             $("#mutableMiddleColumn").load("../html/colunameiopet.html");
         }
+        listPets();
         state = 1;
     });
 }
@@ -176,9 +178,10 @@ function goToRegisterPet(){
     state = 1;
 }
 
-function goToEditPet(){
+function goToEditPet(id){
     $("#mutableMiddleColumn").load("../html/colunameioeditaranimais.html");
     state = 1;
+    pet_id = id;
 }
 
 function registerPet(){
@@ -204,6 +207,9 @@ function registerPet(){
                     add.onsuccess = function(e){
                         console.log("cadastrou bunito");
                     }
+
+                    goToRegisterOrListPet();
+
                     db.close();
                 }
             }
@@ -217,6 +223,60 @@ function registerPet(){
     });
 }
 
+function editPet(){
+    $(document).ready( function(){
+        var newPetName = $("#petName").val();
+        var newRace = $("#race").val();
+        var newAge = $("#age").val();
+
+        var request = indexedDB.open("petshop", 3);
+
+        request.onsuccess = function(event){
+            var db = event.target.result;
+
+            var transaction = db.transaction(["Animais"], "readwrite");
+
+            var store = transaction.objectStore("Animais");
+
+            var get = store.get(pet_id);
+
+            get.onsuccess = function(e){
+                var result = e.target.result;
+
+
+                if(typeof result !== "undefined"){
+                    if(newPetName === ""){
+                        newPetName = result.petName;
+                    }
+
+                    if(newRace === ""){
+                        newRace = result.race;
+                    }
+
+                    if(newAge === ""){
+                        newAge = result.age;
+                    }
+
+                    var pet = {
+                        id: Number(pet_id),
+                        petName: newPetName,
+                        race: newRace,
+                        age: Number(newAge),
+                        login: result.login
+                    };
+
+                    var update = store.put(pet);
+
+                    goToRegisterOrListPet();
+                }
+            };
+
+            db.close();
+
+        };
+    });
+
+}
 
 function editProfile(){
     $(document).ready(function(){
@@ -229,6 +289,7 @@ function editProfile(){
         var newTel = $("#newTel").val();
         var newEmail = $("#newEmail").val();
         var isAdmin = false;
+        var empty_password = 0;
 
         var request = indexedDB.open("petshop", 3);
 
@@ -259,6 +320,8 @@ function editProfile(){
 
                     if(newPassWord === "" && newPassWord2 === ""){
                         newPassWord = result.passWord;
+                        newPassWord2 = result.passWord;
+                        empty_password = 1;
                     }
 
                     if(newAdress === ""){
@@ -287,7 +350,7 @@ function editProfile(){
                 };
 
                 if(newPassWord === newPassWord2){
-                    if(newPassWord === oldPassWord && newPassWord !== ""){
+                    if(newPassWord === oldPassWord && newPassWord !== "" && empty_password == 0){
                         alert("A senha deve ser distinta da anterior");
                     }else{
                         var update = store.put(user);
@@ -351,24 +414,97 @@ function adminNavBar(){
 }
 /*----------------------------utilidades--------------------------------------*/
 
+function deletePet(id){
+    $(document).ready( function(){
+        if(confirm("Deseja mesmo deletar esse Animal?")){
+            var request = indexedDB.open("petshop", 3);
+
+            request.onsuccess = function(event){
+                var db = event.target.result
+
+                var transaction = db.transaction(["Animais"], "readwrite");
+
+                var store = transaction.objectStore("Animais");
+
+                var del = store.delete(id);
+
+                goToRegisterOrListPet();
+
+                db.close();
+            };
+        }
+    });
+}
+
 //falta inserir foto
 function changeHMTL(table, n, id){
-    console.log(table);
-    console.log(n)
-
     if(id === "#estoque"){
         var eachline = "<tr><th>Id</th><th>Nome</th><th>Descrição</th><th>Preço</th><th>Quantidade em estoque</th><th>Quantidade vendida</th></tr>";
         for(i=0; i<n; i++){
             eachline += "<tr><td>"+ table[i].id.toString()+"</td><td>"+ table[i].name+"</td><td>"+table[i].descricao+"</td><td>"+table[i].preco.toString()+"</td><td>"+table[i].qtd_estoque.toString()+"</td><td>"+table[i].qtd_vendida.toString()+"</td></tr>";
         }
-    }else{
+    }else if(id === "#servicos"){
         var eachline = "<tr><th>Id</th><th>Nome</th><th>Descrição</th><th>Preço</th></tr>";
         for(i=0; i<n; i++){
             eachline += "<tr><td>"+ table[i].id.toString()+"</td><td>"+ table[i].name+"</td><td>"+table[i].descricao+"</td><td>"+table[i].preco.toString()+"</td></tr>";
         }
+    }else{
+        eachline="";
+        for(i=0; i<n; i++){
+            console.log(n);
+            eachline += '<li><img src="/assets/pic.jpg" alt="Someone" style="width:130px; height:130px;"><br>Nome: ' + table[i].petName + "<br>Raça: " + table[i].race + "<br>Idade: " + table[i].age + "<br>" + '<a><button class="btn" type="button" onClick="goToEditPet('+table[i].id+');">Atualizar</button></a><button class="btn" type="button" onclick="deletePet('+table[i].id+')">Deletar</button><br></li>';
+        }
     }
 
     $(id).html(eachline);
+}
+
+function listPets(){
+    $(document).ready( function(){
+        try{
+
+            var n = 0;
+            var table;
+            var request = indexedDB.open("petshop", 3);
+
+            console.log("estoque");
+
+            request.onsuccess = function(event){
+                var db = event.target.result;
+
+                var transaction = db.transaction(["Animais"], "readwrite");
+
+                var store = transaction.objectStore("Animais");
+
+                var count = store.count();
+
+                count.onsuccess = function(){
+                    n = count.result;
+                };
+
+                var getAll = store.getAll();
+
+                getAll.onsuccess = function(e){
+                    table = e.target.result;
+                    var table2 = [];
+                    var n2 = 0;
+
+                    for (i=0;i<n;i++){
+                        if(table[i].login === loggedUser){
+                            table2[n2] = table[i];
+                            n2++;
+                        }
+                    }
+                    changeHMTL(table2, n2, "#pets");
+                };
+
+                db.close();
+            };
+
+        }catch(err){
+            console.log(err.message);
+        }
+    });
 }
 
 function listStock(){

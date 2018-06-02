@@ -13,7 +13,7 @@ $(document).ready( function(){
         var users = db.createObjectStore("Usuarios", {keyPath: "login"});
         var stock = db.createObjectStore("Estoque", {keyPath: "id", autoIncrement: true});
         var services = db.createObjectStore("Servicos", {keyPath: "id", autoIncrement: true});
-        var pet = db.createObjectStore("Animais", {keyPath: "login"});
+        var pet = db.createObjectStore("Animais", {keyPath: "id", autoIncrement: true});
 
         var transaction = event.target.transaction;
 
@@ -30,6 +30,18 @@ $(document).ready( function(){
         };
 
         var add = store.add(user);
+
+        user = {
+            name: "Jorge",
+            login: "Jorge",
+            passWord: "321",
+            address: "AV 4",
+            tel: 38998789,
+            email: "jorge.motokubo@usp.br",
+            isAdmin: false
+        };
+
+        add = store.add(user);
 
         store = transaction.objectStore("Servicos");
 
@@ -114,6 +126,45 @@ $(document).ready( function(){
         }
 
         add = store.add(product);
+
+        store = transaction.objectStore("Animais");
+
+
+        var pet = {
+                login: "Vitor",
+                petName: "Nina",
+                race: "Lhasa",
+                age: 2
+        };
+
+        add = store.add(pet);
+
+        pet = {
+                login: "Vitor",
+                petName: "Cotinha",
+                race: "Vira-lata",
+                age: 5
+        };
+
+        add = store.add(pet);
+
+        pet = {
+                login: "Vitor",
+                petName: "Sheilinha",
+                race: "Vira-lata",
+                age: 4
+        };
+
+        add = store.add(pet);
+
+        /*pet = {
+                login: "Jorge",
+                petName: "Cotuba",
+                race: "Poodle",
+                age: 5
+        };
+
+        add = store.add(pet);*/
 
         console.log("BD atualizado");
 
