@@ -152,9 +152,28 @@ function goToSchedule(){
     });
 }
 
+function goToDeleteService(){
+	$("#mutableMiddleColumn").load("../html/colunameiodeletarservico.html");
+    state = 1;
+}
+
+function goToUpdateService(){
+	$("#mutableMiddleColumn").load("../html/colunameioatualizarservico.html");
+    state = 1;
+}
+
 function goToRegisterService(){
-	console.log("Vaitomarnocu");
 	$("#mutableMiddleColumn").load("../html/colunameiocadastrarservico.html");
+    state = 1;
+}
+
+function goToDeleteProduct(){
+	$("#mutableMiddleColumn").load("../html/colunameiodeletarprodutos.html");
+    state = 1;
+}
+
+function goToUpdateProduct(){
+	$("#mutableMiddleColumn").load("../html/colunameioatualizarprodutos.html");
     state = 1;
 }
 
@@ -432,6 +451,245 @@ function deletePet(id){
 
                 db.close();
             };
+        }
+    });
+}
+
+function carregarServico(){
+	$(document).ready( function(){
+        try{
+            var id = $("#ID").val();
+
+            if(id !== ""){
+
+				var request = indexedDB.open("petshop", 3);
+
+				request.onsuccess = function(event){
+					var db = event.target.result;
+					var transaction = db.transaction(["Servicos"], "readwrite");
+					var store = transaction.objectStore("Servicos");
+					var request = store.get(Number(id));
+
+					request.onsuccess = function(e){
+						document.getElementById("productName").value = request.result.name;
+						document.getElementById("descricao").value = request.result.descricao;
+						document.getElementById("price").value = request.result.preco;
+						// console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
+					};
+
+					db.close();
+				}
+            }else{
+                alert("É necessário preencher o ID!");
+            }
+        }catch(err){
+			console.log(err.message);
+        }
+    });
+}
+
+function atualizarServico(){
+	$(document).ready( function(){
+        try{
+            var id = $("#ID").val();
+			var name = $("#productName").val();
+			var descricao = $("#descricao").val();
+			var preco = $("#price").val();
+
+            if(confirm("Quer mesmo atualizar o servico?")){
+				if(id !== "" && name !== "" && descricao !== "" && preco !== ""){
+
+					var request = indexedDB.open("petshop", 3);
+
+					request.onsuccess = function(event){
+						var db = event.target.result;
+						var transaction = db.transaction(["Servicos"], "readwrite");
+						var store = transaction.objectStore("Servicos");
+						var request = store.get(Number(id));
+
+						request.onsuccess = function(e){
+							var data = request.result;
+							data.name = name;
+							data.descricao = descricao;
+							data.preco = preco;
+							// console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
+
+							var requestUpdate = store.put(data);
+								requestUpdate.onsuccess = function(event){
+									alert("O id " + id + " foi atualizado");
+								}
+						};
+
+						db.close();
+						goToServiceManager();
+					}
+				}else{
+					alert("É necessário preencher os campos!");
+				}
+			}
+        }catch(err){
+			console.log(err.message);
+        }
+    });
+}
+
+function deletarServico(){
+	$(document).ready( function(){
+        try{
+            var id = $("#ID").val();
+			var name = $("#productName").val();
+			var descricao = $("#descricao").val();
+			var preco = $("#price").val();
+
+            if(confirm("Quer mesmo deletar o servico?")){
+				if(id !== "" && name !== "" && descricao !== "" && preco !== ""){
+
+					var request = indexedDB.open("petshop", 3);
+
+					request.onsuccess = function(event){
+						var db = event.target.result;
+						var transaction = db.transaction(["Servicos"], "readwrite");
+						var store = transaction.objectStore("Servicos");
+
+
+						var request = store.delete(Number(id));
+						request.onsuccess = function(e){
+							alert("O id " + id + " foi deletado");
+						};
+
+						db.close();
+						goToServiceManager();
+					}
+				}else{
+					alert("É necessário preencher os campos!");
+				}
+			}
+        }catch(err){
+			console.log(err.message);
+        }
+    });
+}
+
+function carregarProduto(){
+	$(document).ready( function(){
+        try{
+            var id = $("#ID").val();
+
+            if(id !== ""){
+
+				var request = indexedDB.open("petshop", 3);
+
+				request.onsuccess = function(event){
+					var db = event.target.result;
+					var transaction = db.transaction(["Estoque"], "readwrite");
+					var store = transaction.objectStore("Estoque");
+					var request = store.get(Number(id));
+
+					request.onsuccess = function(e){
+						document.getElementById("productName").value = request.result.name;
+						document.getElementById("descricao").value = request.result.descricao;
+						document.getElementById("price").value = request.result.preco;
+						document.getElementById("stock").value = request.result.qtd_estoque;
+						document.getElementById("sold").value = request.result.qtd_vendida;
+						// console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
+					};
+
+					db.close();
+				}
+            }else{
+                alert("É necessário preencher o ID!");
+            }
+        }catch(err){
+			console.log(err.message);
+        }
+    });
+}
+
+function atualizarProduto(){
+	$(document).ready( function(){
+        try{
+            var id = $("#ID").val();
+			var name = $("#productName").val();
+			var descricao = $("#descricao").val();
+			var preco = $("#price").val();
+			var stock = $("#stock").val();
+			var sold = $("#sold").val();
+
+            if(confirm("Quer mesmo atualizar o produto?")){
+				if(id !== "" && name !== "" && descricao !== "" && preco !== "" && stock !== "" && sold !== ""){
+
+					var request = indexedDB.open("petshop", 3);
+
+					request.onsuccess = function(event){
+						var db = event.target.result;
+						var transaction = db.transaction(["Estoque"], "readwrite");
+						var store = transaction.objectStore("Estoque");
+						var request = store.get(Number(id));
+
+						request.onsuccess = function(e){
+							var data = request.result;
+							data.name = name;
+							data.descricao = descricao;
+							data.preco = preco;
+							data.qtd_estoque = stock;
+							data.qtd_vendida = sold;
+							// console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
+
+							var requestUpdate = store.put(data);
+								requestUpdate.onsuccess = function(event){
+									alert("O id " + id + " foi atualizado");
+								}
+						};
+
+						db.close();
+						goToStockManager();
+					}
+				}else{
+					alert("É necessário preencher os campos!");
+				}
+			}
+        }catch(err){
+			console.log(err.message);
+        }
+    });
+}
+
+function deletarProduto(){
+	$(document).ready( function(){
+        try{
+            var id = $("#ID").val();
+			var name = $("#productName").val();
+			var descricao = $("#descricao").val();
+			var preco = $("#price").val();
+			var stock = $("#stock").val();
+			var sold = $("#sold").val();
+
+            if(confirm("Quer mesmo deletar o produto?")){
+				if(id !== "" && name !== "" && descricao !== "" && preco !== ""){
+
+					var request = indexedDB.open("petshop", 3);
+
+					request.onsuccess = function(event){
+						var db = event.target.result;
+						var transaction = db.transaction(["Estoque"], "readwrite");
+						var store = transaction.objectStore("Estoque");
+
+
+						var request = store.delete(Number(id));
+						request.onsuccess = function(e){
+							alert("O id " + id + " foi deletado");
+						};
+
+						db.close();
+						goToStockManager();
+					}
+				}else{
+					alert("É necessário preencher os campos!");
+				}
+			}
+        }catch(err){
+			console.log(err.message);
+
         }
     });
 }
@@ -728,11 +986,11 @@ function registerProduct(){
 
 					db.close()
 				};
+				goToStockManager();
 
             }else{
                 alert("É necessário preencher todos os campos!");
             }
-            goToStockManager();
         }catch(err){
 			console.log(err.message);
         }
