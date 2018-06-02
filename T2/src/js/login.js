@@ -203,13 +203,30 @@ function goToEditPet(id){
     pet_id = id;
 }
 
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#photo')
+                .attr('src', e.target.result)
+                .width(130)
+                .height(130);
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
 function registerPet(){
     $(document).ready( function(){
         console.log("entrou pet");
         try {
             var petName = $("#petName").val();
             var race = $("#race").val();
+            var petPhoto = $("#photo").attr('src');
             var age = $("#age").val();
+
             if (petName !== "" && race !== "" && age !== "") {
                 var request = indexedDB.open("petshop", 3);
                 request.onsuccess = function(e) {
@@ -218,6 +235,7 @@ function registerPet(){
                     var store = transaction.objectStore("Animais");
                     var pet = {
                         login: loggedUser,
+                        petPhoto: petPhoto,
                         petName: petName,
                         race: race,
                         age: age
@@ -227,9 +245,9 @@ function registerPet(){
                         console.log("cadastrou bunito");
                     }
 
-                    goToRegisterOrListPet();
-
                     db.close();
+
+                    goToRegisterOrListPet();
                 }
             }
         } catch(err) {
@@ -245,6 +263,7 @@ function registerPet(){
 function editPet(){
     $(document).ready( function(){
         var newPetName = $("#petName").val();
+        var newPetPhoto = $("#photo").attr('src');
         var newRace = $("#race").val();
         var newAge = $("#age").val();
 
@@ -272,6 +291,10 @@ function editPet(){
                         newRace = result.race;
                     }
 
+                    if(newPetPhoto === "../assets/pic.jpg"){
+                        newPetPhoto = result.petPhoto;
+                    }
+
                     if(newAge === ""){
                         newAge = result.age;
                     }
@@ -279,6 +302,7 @@ function editPet(){
                     var pet = {
                         id: Number(pet_id),
                         petName: newPetName,
+                        petPhoto: newPetPhoto,
                         race: newRace,
                         age: Number(newAge),
                         login: result.login
@@ -286,11 +310,12 @@ function editPet(){
 
                     var update = store.put(pet);
 
-                    goToRegisterOrListPet();
                 }
             };
 
             db.close();
+
+            goToRegisterOrListPet();
 
         };
     });
@@ -300,6 +325,7 @@ function editPet(){
 function editProfile(){
     $(document).ready(function(){
         var newName = $("#newName").val();
+        var newPhoto = $("#photo").attr('src');
         var newLogin = $("#newLogin").val();
         var oldPassWord = $("#oldPassWord").val();
         var newPassWord = $("#newPassWord").val();
@@ -331,11 +357,9 @@ function editProfile(){
                         newName = result.name;
                     }
 
-                    /*Estou pensando em tirar isso pqe vai complicar demais poder mudar a chave, mas preciso pesquisar ainda*/
-                    /*if(newLogin === ""){
-                        newLogin = result.login;
-
-                    }*/
+                    if(newPhoto === "/assets/pic.jpg"){
+                        newPhoto = result.photo;
+                    }
 
                     if(newPassWord === "" && newPassWord2 === ""){
                         newPassWord = result.passWord;
@@ -358,8 +382,11 @@ function editProfile(){
                     isAdmin = result.isAdmin;
                 }
 
+
+
                 var user = {
                     name: newName,
+                    photo: newPhoto,
                     login: loggedUser,
                     passWord: newPassWord,
                     address: newAdress,
@@ -367,6 +394,8 @@ function editProfile(){
                     email: newEmail,
                     isAdmin: isAdmin
                 };
+
+                console.log(newPhoto);
 
                 if(newPassWord === newPassWord2){
                     if(newPassWord === oldPassWord && newPassWord !== "" && empty_password == 0){
@@ -376,6 +405,7 @@ function editProfile(){
 
                         update.onsuccess = function(){
                             console.log("alterou bunito");
+                            $("#userPhoto").attr('src', user.photo);
                         }
 
                         alert("Alteracao realizada com sucesso");
@@ -396,6 +426,7 @@ function userCard(name, photo){
     $(document).ready( function(){
         $("#mutableCard").load("../html/usercard.html", function(){
             $("#personName").html(name);
+            $("#userPhoto").attr('src', photo);
         });
     });
 }
@@ -404,6 +435,10 @@ function adminCard(name, photo){
     $(document).ready( function(){
         $("#mutableCard").load("../html/admincard.html", function(){
             $("#personName").html(name);
+            $("#photoAdmin")
+                .attr('src', photo)
+                .width(130)
+                .height(130);
         });
     });
 }
@@ -447,9 +482,9 @@ function deletePet(id){
 
                 var del = store.delete(id);
 
-                goToRegisterOrListPet();
-
                 db.close();
+
+                goToRegisterOrListPet();
             };
         }
     });
@@ -694,7 +729,6 @@ function deletarProduto(){
     });
 }
 
-//falta inserir foto
 function changeHMTL(table, n, id){
     if(id === "#estoque"){
         var eachline = "<tr><th>Id</th><th>Nome</th><th>Descrição</th><th>Preço</th><th>Quantidade em estoque</th><th>Quantidade vendida</th></tr>";
@@ -710,7 +744,7 @@ function changeHMTL(table, n, id){
         eachline="";
         for(i=0; i<n; i++){
             console.log(n);
-            eachline += '<li><img src="/assets/pic.jpg" alt="Someone" style="width:130px; height:130px;"><br>Nome: ' + table[i].petName + "<br>Raça: " + table[i].race + "<br>Idade: " + table[i].age + "<br>" + '<a><button class="btn" type="button" onClick="goToEditPet('+table[i].id+');">Atualizar</button></a><button class="btn" type="button" onclick="deletePet('+table[i].id+')">Deletar</button><br></li>';
+            eachline += '<li><img src='+ table[i].petPhoto+ ' alt="Someone" style="width:130px; height:130px;"><br>Nome: ' + table[i].petName + "<br>Raça: " + table[i].race + "<br>Idade: " + table[i].age + "<br>" + '<a><button class="btn" type="button" onClick="goToEditPet('+table[i].id+');">Atualizar</button></a><button class="btn" type="button" onclick="deletePet('+table[i].id+')">Deletar</button><br></li>';
         }
     }
 
@@ -724,8 +758,6 @@ function listPets(){
             var n = 0;
             var table;
             var request = indexedDB.open("petshop", 3);
-
-            console.log("estoque");
 
             request.onsuccess = function(event){
                 var db = event.target.result;
@@ -847,6 +879,7 @@ function registerAdmin(){
         try{
             var name = $("#name").val();
             var login = $("#login").val();
+            var photo = $("#photo").attr('src');
             var passWord = $("#passWord").val();
             var passWord2 = $("#passWord2").val();
             var address = $("#address").val();
@@ -868,6 +901,7 @@ function registerAdmin(){
 						var user = {
 							name: name,
 							login: login,
+                            photo: photo,
 							passWord: passWord,
 							address: address,
 							tel: tel,
@@ -879,6 +913,8 @@ function registerAdmin(){
 
 						add.onsuccess = function(e){
 							console.log("cadastrou bunito");
+                            alert("Cadastro realizado com sucesso");
+                            goToAdminRegister();
 						}
 
 						db.close()
@@ -900,6 +936,7 @@ function registerClient(){
         try{
             var name = $("#name").val();
             var login = $("#login").val();
+            var photo = $("#photo").attr('src');
             var passWord = $("#passWord").val();
             var passWord2 = $("#passWord2").val();
             var address = $("#address").val();
@@ -921,6 +958,7 @@ function registerClient(){
 						var user = {
 							name: name,
 							login: login,
+                            photo: photo,
 							passWord: passWord,
 							address: address,
 							tel: tel,
@@ -932,6 +970,8 @@ function registerClient(){
 
 						add.onsuccess = function(e){
 							console.log("cadastrou bunito");
+                            alert("Cadastro efetuado com sucesso");
+                            goToClientRegister();
 						};
 
 
@@ -954,6 +994,7 @@ function registerProduct(){
         try{
             var name = $("#productName").val();
             var descricao = $("#descricao").val();
+            var photo = $("#photo").attr('src');
             var price = $("#price").val();
             var stock = $("#stock").val();
             var sold = $("#sold").val();
@@ -972,6 +1013,7 @@ function registerProduct(){
 					var product = {
 						name: name,
 						descricao: descricao,
+                        photo: photo,
 						preco: Number(price),
 						qtd_estoque: Number(stock),
 						qtd_vendida: Number(sold),
@@ -1002,6 +1044,7 @@ function registerService(){
         try{
             var name = $("#productName").val();
             var descricao = $("#descricao").val();
+            var photo = $("#photo").attr('src');
             var price = $("#price").val();
 
             if(name !== "" && descricao !== "" && price !== ""){
@@ -1017,6 +1060,7 @@ function registerService(){
 
 					var service = {
 						name: name,
+                        photo: photo,
 						descricao: descricao,
 						preco: Number(price),
 					};
@@ -1066,7 +1110,7 @@ function userLogin(){
                 if(typeof result !== "undefined"){
                     if(result.login === userName && result.passWord === passWord){
                         userNavBar();
-                        userCard(userName, "");
+                        userCard(userName, result.photo);
                     }else{
                         alert("Senha inválida");
                     }
@@ -1108,7 +1152,7 @@ function adminLogin(){
                 if(typeof result !== "undefined"){
                     if(result.login === userName && result.passWord === passWord && result.isAdmin){
                         adminNavBar();
-                        adminCard(userName, "");
+                        adminCard(userName, result.photo);
                         console.log("WELCOME LORD");
                     }else{
                         alert("VOCE NÃO É UM ADMIN!!");

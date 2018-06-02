@@ -21,6 +21,7 @@ $(document).ready( function(){
 
         var user = {
             name: "Vitor",
+            photo: "/images/users/vitoradm.jpg",
             login: "Vitor",
             passWord: "1234",
             address: "AV 3",
@@ -33,12 +34,26 @@ $(document).ready( function(){
 
         user = {
             name: "Jorge",
+            photo: "/images/users/jorgeadm.jpg",
             login: "Jorge",
             passWord: "321",
             address: "AV 4",
             tel: 38998789,
             email: "jorge.motokubo@usp.br",
-            isAdmin: false
+            isAdmin: true
+        };
+
+        add = store.add(user);
+
+        user = {
+            name: "Raul",
+            photo: "/images/users/rauladm.jpg",
+            login: "Raul",
+            passWord: "312",
+            address: "AV 5",
+            tel: 38587869,
+            email: "raul.costa@usp.br",
+            isAdmin: true
         };
 
         add = store.add(user);
@@ -133,38 +148,52 @@ $(document).ready( function(){
         var pet = {
                 login: "Vitor",
                 petName: "Nina",
+                petPhoto: "/images/pets/nina.jpeg",
                 race: "Lhasa",
                 age: 2
         };
 
         add = store.add(pet);
 
-        pet = {
+        /*pet = {
                 login: "Vitor",
                 petName: "Cotinha",
+                petPhoto: "/images/pets/cotinha.jpeg",
                 race: "Vira-lata",
                 age: 5
         };
 
-        add = store.add(pet);
+        add = store.add(pet);*/
 
         pet = {
                 login: "Vitor",
                 petName: "Sheilinha",
+                petPhoto: "/images/pets/sheilinha.jpeg",
                 race: "Vira-lata",
                 age: 4
         };
 
         add = store.add(pet);
 
-        /*pet = {
+        pet = {
                 login: "Jorge",
-                petName: "Cotuba",
-                race: "Poodle",
+                petPhoto: "/images/pets/yuki.jpg",
+                petName: "Yuki",
+                race: "Lhasa",
                 age: 5
         };
 
-        add = store.add(pet);*/
+        add = store.add(pet);
+
+        pet = {
+                login: "Raul",
+                petPhoto: "/images/pets/wolfy.jpg",
+                petName: "Wolfy",
+                race: "Doguinho",
+                age: 5
+        };
+
+        add = store.add(pet);
 
         console.log("BD atualizado");
 
