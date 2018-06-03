@@ -62,6 +62,7 @@ $(document).ready( function(){
 
         var service = {
             name: "Banho",
+			photo: "/assets/banho.jpg",
             descricao: "Lavagem de animais",
             preco: 59.99
         };
@@ -70,6 +71,7 @@ $(document).ready( function(){
 
         service = {
             name: "Tosa",
+			photo: "/assets/tosa.jpg",
             descricao: "Tosa de animais",
             preco: 25.99
         };
@@ -78,6 +80,7 @@ $(document).ready( function(){
 
         service = {
             name: "Veterinario de plantao",
+			photo: "/assets/vet.png",
             descricao: "Checar a disponibilidade de um veterinario",
             preco: 89.99
         };
@@ -86,6 +89,7 @@ $(document).ready( function(){
 
         service = {
             name: "Adestramento",
+			photo: "/assets/adestramento.jpg",
             descricao: "Serviço de adestramento de animais",
             preco: 150
         };
@@ -94,6 +98,7 @@ $(document).ready( function(){
 
         service = {
             name: "Loja física",
+			photo: "/assets/loja.jpg",
             descricao: "Checar localizacao de nossas lojas",
             preco: 0
         };
@@ -104,6 +109,7 @@ $(document).ready( function(){
 
         var product = {
             name: "Advantage 3",
+			photo: "/assets/max.jpg",
             descricao: "Remedio anti-pulga para cachorro",
             preco: 49.99,
             qtd_estoque: 150,
@@ -114,6 +120,7 @@ $(document).ready( function(){
 
         product = {
             name: "DentalLife",
+			photo: "/assets/purina.jpg",
             descricao: "Remedio para cachorros",
             preco: 39.99,
             qtd_estoque: 190,
@@ -124,6 +131,7 @@ $(document).ready( function(){
 
         product = {
             name: "Pedigree",
+			photo: "/assets/racao.jpg",
             descricao: "Racao para cachorro",
             preco: 49.90,
             qtd_estoque: 25,
@@ -134,6 +142,7 @@ $(document).ready( function(){
 
         product = {
             name: "Urinary",
+			photo: "/assets/royalcanin.jpg",
             descricao: "Nem ideia",
             preco: 19.90,
             qtd_estoque: 150,
@@ -144,6 +153,7 @@ $(document).ready( function(){
 
         product = {
             name: "Whiskas",
+			photo: "/assets/whiskas.jpg",
             descricao: "Racao para gato",
             preco: 19.90,
             qtd_estoque: 150,

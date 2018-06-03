@@ -4,7 +4,7 @@
     <div>
 		ID: <br><input type="number" name="ID" id="ID"> <button class="button1AboutAdmin"  onclick="carregarServico();">Recarregar</button> <br><br>
 		Nome: <br><input type="text" name="productName" id="productName"><br><br>
-		Foto: <br><img src="../assets/pic.jpg" alt="Someone" style="width:130px; height:130px;"><br><button>Upload</button><br><br>
+		Foto: <br><img id="photo" src="../assets/pic.jpg" alt="Someone" style="width:130px; height:130px;"><br><input class="input2" type='file' onchange="readURL(this);"/><br><br>
 		Descricao: <br><input type="text" name="Descricao" id="descricao"><br><br>
 		Preco: <br><input type="number" name="Idade" id="price"><br><br>
     </div>

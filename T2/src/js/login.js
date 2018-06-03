@@ -582,10 +582,18 @@ function carregarServico(){
 					var request = store.get(Number(id));
 
 					request.onsuccess = function(e){
-						document.getElementById("productName").value = request.result.name;
-						document.getElementById("descricao").value = request.result.descricao;
-						document.getElementById("price").value = request.result.preco;
-						// console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
+						
+						var result = e.target.result;
+						if(typeof result !== "undefined"){
+							
+							document.getElementById("productName").value = request.result.name;
+							document.getElementById("photo").src = request.result.photo;
+							document.getElementById("descricao").value = request.result.descricao;
+							document.getElementById("price").value = request.result.preco;
+							// console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
+						}else{
+							alert("O ID não existe");
+						}
 					};
 
 					db.close();
@@ -604,6 +612,7 @@ function atualizarServico(){
         try{
             var id = $("#ID").val();
 			var name = $("#productName").val();
+            var photo = $("#photo").attr('src');
 			var descricao = $("#descricao").val();
 			var preco = $("#price").val();
 
@@ -621,6 +630,7 @@ function atualizarServico(){
 						request.onsuccess = function(e){
 							var data = request.result;
 							data.name = name;
+							data.photo = photo;
 							data.descricao = descricao;
 							data.preco = preco;
 							// console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
@@ -697,14 +707,22 @@ function carregarProduto(){
 					var request = store.get(Number(id));
 
 					request.onsuccess = function(e){
-						document.getElementById("productName").value = request.result.name;
-						document.getElementById("descricao").value = request.result.descricao;
-						document.getElementById("price").value = request.result.preco;
-						document.getElementById("stock").value = request.result.qtd_estoque;
-						document.getElementById("sold").value = request.result.qtd_vendida;
-						// console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
+						
+						var result = e.target.result;
+						if(typeof result !== "undefined"){
+							
+							document.getElementById("productName").value = request.result.name;
+							document.getElementById("photo").src = request.result.photo;
+							document.getElementById("descricao").value = request.result.descricao;
+							document.getElementById("price").value = request.result.preco;
+							document.getElementById("stock").value = request.result.qtd_estoque;
+							document.getElementById("sold").value = request.result.qtd_vendida;
+							// console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
+						}else{
+							alert("O ID não existe");
+						}
 					};
-
+					
 					db.close();
 				}
             }else{
@@ -721,10 +739,12 @@ function atualizarProduto(){
         try{
             var id = $("#ID").val();
 			var name = $("#productName").val();
+            var photo = $("#photo").attr('src');
 			var descricao = $("#descricao").val();
 			var preco = $("#price").val();
 			var stock = $("#stock").val();
 			var sold = $("#sold").val();
+			console.log(photo);
 
             if(confirm("Quer mesmo atualizar o produto?")){
 				if(id !== "" && name !== "" && descricao !== "" && preco !== "" && stock !== "" && sold !== ""){
@@ -740,6 +760,7 @@ function atualizarProduto(){
 						request.onsuccess = function(e){
 							var data = request.result;
 							data.name = name;
+							data.photo = photo;
 							data.descricao = descricao;
 							data.preco = preco;
 							data.qtd_estoque = stock;
