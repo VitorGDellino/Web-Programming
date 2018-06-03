@@ -103,8 +103,8 @@ $(document).ready( function(){
         store = transaction.objectStore("Estoque");
 
         var product = {
-            name: "Comida de cachorro",
-            descricao: "Saco de ração de cachorro",
+            name: "Advantage 3",
+            descricao: "Remedio anti-pulga para cachorro",
             preco: 49.99,
             qtd_estoque: 150,
             qtd_vendida: 20
@@ -113,8 +113,8 @@ $(document).ready( function(){
         add = store.add(product);
 
         product = {
-            name: "Comida de gato",
-            descricao: "Saco de ração de gato",
+            name: "DentalLife",
+            descricao: "Remedio para cachorros",
             preco: 39.99,
             qtd_estoque: 190,
             qtd_vendida: 10
@@ -123,9 +123,9 @@ $(document).ready( function(){
         add = store.add(product);
 
         product = {
-            name: "Casinha",
-            descricao: "Casinha para animais de médio porte",
-            preco: 99.90,
+            name: "Pedigree",
+            descricao: "Racao para cachorro",
+            preco: 49.90,
             qtd_estoque: 25,
             qtd_vendida: 3
         }
@@ -133,8 +133,18 @@ $(document).ready( function(){
         add = store.add(product);
 
         product = {
-            name: "Brinquedo de cachorro",
-            descricao: "Osso de brinquedo para cachorro",
+            name: "Urinary",
+            descricao: "Nem ideia",
+            preco: 19.90,
+            qtd_estoque: 150,
+            qtd_vendida: 89
+        }
+
+        add = store.add(product);
+
+        product = {
+            name: "Whiskas",
+            descricao: "Racao para gato",
             preco: 19.90,
             qtd_estoque: 150,
             qtd_vendida: 89

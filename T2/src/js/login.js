@@ -108,8 +108,82 @@ function goToBuy(){
     });
 }
 
+
+function insertInCart (product) {
+    var quantity = document.getElementById(product).value;
+    var hasUpdate = false;
+    if(quantity != "") {
+        // cart[product] = parseInt(quantity);
+        aux = {
+            name: product,
+            quant: parseInt(quantity)
+        };
+        // cart.push(aux);
+        for (var item in cart) {
+            // console.log(item);
+            if (cart[item].name == product) {//Este produto ja esta inserido
+                //atualiza somente a quantidade dele
+                cart[item].quant = parseInt(quantity);
+                hasUpdate = true;
+                // console.log("entrou aqui no update");
+            }
+        }
+
+        if (!hasUpdate) {
+            cart.push(aux);
+            hasUpdate = false;
+        }
+
+    } else {
+        // delete cart[product];
+        for (var elem in cart) {
+            if (cart[elem].name == product) {
+                delete cart[elem];
+            }
+        }
+    }
+    console.log(cart);
+}
+
+
 function goToFinalizeBuy(){
     $(document).ready( function(){
+        var valorDaCompra = 0;
+
+        var request = indexedDB.open("petshop", 3);
+
+        request.onsuccess = function(event){
+            var db = event.target.result;
+            var transaction = db.transaction(["Estoque"], "readwrite");
+            var store = transaction.objectStore("Estoque");
+            var count = store.count();
+            count.onsuccess = function(){
+                n = count.result;
+            };
+            var getAll = store.getAll();
+            getAll.onsuccess = function(e){
+
+                for (var item_cart in cart) { //checa se os a quantidade pedida esta disponivel em estoque e calcula o valor final da compra
+                    for (var item_bd in e.target.result) {
+                        if (cart[item_cart].name == e.target.result[item_bd].name) {
+                            if (e.target.result[item_bd].qtd_estoque < cart[item_cart].quant) {
+                                alert ("Quantidade de item nao disponivel em estoque");
+                                //TODO voltar para tela inicial de Comprar
+                                cart = [];
+                                break;
+                            } else {
+                                //TODO atualiar bd, retirando do estoque do produto e colocando no itens vendidos
+                                valorDaCompra = valorDaCompra + e.target.result[item_bd].preco * cart[item_cart].quant;
+                            }
+                        }
+                    }
+                }
+
+            };
+        //
+            db.close();
+        };
+
         $("#mutableMiddleColumn").load("../html/colunameioprodutocartao.html");
         state = 1;
     });
