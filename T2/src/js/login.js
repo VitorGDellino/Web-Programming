@@ -2,6 +2,8 @@
 state = 0;
 loggedUser = "";
 pet_id = 0;
+cart = [];
+
 //window.location.reload(true);
 function goToHome(){
     $(document).ready( function(){
@@ -178,7 +180,7 @@ function goToFinalizeBuy(){
                         }
                     }
                 }
-
+                console.log("valor da compra: "+valorDaCompra);
             };
         //
             db.close();
