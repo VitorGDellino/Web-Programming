@@ -1,10 +1,12 @@
 /*----------------FUNCOES RELACIONADAS A NAVEGACAO----------------------------*/
+//a variavel state é usada para saber se é necessario mudar as colunas laterais ou apenas a coluna do meio
 state = 0;
 loggedUser = "";
 pet_id = 0;
 cart = [];
 
 //window.location.reload(true);
+//Funcao que carrega a pagina Home
 function goToHome(){
     $(document).ready( function(){
         document.body.style.backgroundImage = "url(./assets/background.png)";
@@ -14,6 +16,8 @@ function goToHome(){
 
 }
 
+//Funcao que carrega a pagina de produtos
+//Se o state for igual a 0, é necessario mudar as colunas laterais e a coluna do meio do HTML
 function goToProducts(){
     $(document).ready( function(){
         if(state == 0){
@@ -26,6 +30,8 @@ function goToProducts(){
     });
 }
 
+//Funcao que carrega a pagina de servicos
+//Se o state for igual a 0, é necessario mudar as colunas laterais e a coluna do meio do HTML
 function goToServices(){
     $(document).ready( function(){
         if(state == 0){
@@ -38,6 +44,7 @@ function goToServices(){
     });
 }
 
+//Funcao que carrega a pagina de about
 function goToAbout(){
     $(document).ready( function(){
         $("#mutableContent").load("../html/about.html");
@@ -46,6 +53,8 @@ function goToAbout(){
     });
 }
 
+//Funcao que carrega a pagina de registrar administradores
+//Se o state for igual a 0, é necessario mudar as colunas laterais e a coluna do meio do HTML
 function goToAdminRegister(){
     $(document).ready( function(){
         if(state == 0){
@@ -58,6 +67,8 @@ function goToAdminRegister(){
     });
 }
 
+//Funcao que carrega a pagina de registrar clientes
+//Se o state for igual a 0, é necessario mudar as colunas laterais e a coluna do meio do HTML
 function goToClientRegister(){
     $(document).ready( function(){
         if(state == 0){
@@ -71,6 +82,8 @@ function goToClientRegister(){
     });
 }
 
+//Funcao que carrega a pagina de gerenciamento de servicos
+//Se o state for igual a 0, é necessario mudar as colunas laterais e a coluna do meio do HTML
 function goToServiceManager(){
     $(document).ready( function(){
         if(state == 0){
@@ -85,6 +98,8 @@ function goToServiceManager(){
     });
 }
 
+//Funcao que carrega a pagina de gerenciamento de produtos
+//Se o state for igual a 0, é necessario mudar as colunas laterais e a coluna do meio do HTML
 function goToStockManager(){
     $(document).ready( function(){
         if(state == 0){
@@ -98,6 +113,8 @@ function goToStockManager(){
     });
 }
 
+//Funcao que carrega a pagina de comprar produto
+//Se o state for igual a 0, é necessario mudar as colunas laterais e a coluna do meio do HTML
 function goToBuy(){
     $(document).ready( function(){
         if(state == 0){
@@ -241,6 +258,8 @@ function updateStorage(product_id, quantidadeVendida) {
     };
 }
 
+//Funcao que carrega a pagina de editar o proprio usuario
+//Se o state for igual a 0, é necessario mudar as colunas laterais e a coluna do meio do HTML
 function goToEditRegister(){
     $(document).ready( function(){
         if(state == 0){
@@ -253,6 +272,8 @@ function goToEditRegister(){
     });
 }
 
+//Funcao que carrega a pagina de listar pets
+//Se o state for igual a 0, é necessario mudar as colunas laterais e a coluna do meio do HTML
 function goToRegisterOrListPet(){
     $(document).ready( function(){
         if(state == 0){
@@ -266,6 +287,8 @@ function goToRegisterOrListPet(){
     });
 }
 
+//Funcao que carrega a pagina de agendamento de servico
+//Se o state for igual a 0, é necessario mudar as colunas laterais e a coluna do meio do HTML
 function goToSchedule(){
     $(document).ready( function(){
         if(state == 0){
@@ -278,57 +301,68 @@ function goToSchedule(){
     });
 }
 
+//Funcao que carrega a pagina de deletar servicos
 function goToDeleteService(){
 	$("#mutableMiddleColumn").load("../html/colunameiodeletarservico.html");
     state = 1;
 }
 
+//Funcao que carrega a pagina de atualizar servicos
 function goToUpdateService(){
 	$("#mutableMiddleColumn").load("../html/colunameioatualizarservico.html");
     state = 1;
 }
 
+//Funcao que carrega a pagina de registrar servicos
 function goToRegisterService(){
 	$("#mutableMiddleColumn").load("../html/colunameiocadastrarservico.html");
     state = 1;
 }
 
+//Funcao que carrega a pagina de deletar produtos
 function goToDeleteProduct(){
 	$("#mutableMiddleColumn").load("../html/colunameiodeletarprodutos.html");
     state = 1;
 }
 
+//Funcao que carrega a pagina de atualizar produtos
 function goToUpdateProduct(){
 	$("#mutableMiddleColumn").load("../html/colunameioatualizarprodutos.html");
     state = 1;
 }
 
+//Funcao que carrega a pagina de cadastrar produtos
 function goToRegisterProduct(){
 	$("#mutableMiddleColumn").load("../html/colunameiocadastrarprodutos.html");
     state = 1;
 }
 
+//Funcao que carrega a pagina de selecionar horario para fazer o agendamento de servico
 function goToSelectHour(){
 	$("#mutableMiddleColumn").load("../html/colunaMeioCalendarioServicosEscolherHorario.html");
     state = 1;
 }
 
+//Funcao que carrega a pagina de fazer o cadastro do agendamento de servico
 function goToFinalizeService(){
     $("#mutableMiddleColumn").load("../html/colunameioschedule.html");
     state = 1;
 }
 
+//Funcao que carrega a pagina de registrar um novo animal
 function goToRegisterPet(){
     $("#mutableMiddleColumn").load("../html/colunameiocadastraranimais.html");
     state = 1;
 }
 
+//Funcao que carrega a pagina de editar um animal que ja exista
 function goToEditPet(id){
     $("#mutableMiddleColumn").load("../html/colunameioeditaranimais.html");
     state = 1;
     pet_id = id;
 }
 
+//funcao para carregar a foto no tamanho certo
 function readURL(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -344,18 +378,21 @@ function readURL(input) {
     }
 }
 
+//Funcao para registrar os animais
 function registerPet(){
     $(document).ready( function(){
-        console.log("entrou pet");
+        //console.log("entrou pet");
         try {
             var petName = $("#petName").val();
             var race = $("#race").val();
             var petPhoto = $("#photo").attr('src');
             var age = $("#age").val();
-
+			
+			//Pega os valoresde cada txtbox do html e verifica se foram preenchidas 
             if (petName !== "" && race !== "" && age !== "") {
                 var request = indexedDB.open("petshop", 3);
                 request.onsuccess = function(e) {
+					//Adiciona os valores no banco de dados na tabela de animais
                     var db = e.target.result;
                     var transaction = db.transaction(["Animais"], "readwrite");
                     var store = transaction.objectStore("Animais");
@@ -380,12 +417,13 @@ function registerPet(){
             console.log(err.message);
         }
 
-        console.log(petName);
-        console.log(race);
-        console.log(age);
+        // console.log(petName);
+        // console.log(race);
+        // console.log(age);
     });
 }
 
+//funcao para editar os animais
 function editPet(){
     $(document).ready( function(){
         var newPetName = $("#petName").val();
@@ -394,7 +432,8 @@ function editPet(){
         var newAge = $("#age").val();
 
         var request = indexedDB.open("petshop", 3);
-
+		//pega os valores das caixas
+	
         request.onsuccess = function(event){
             var db = event.target.result;
 
@@ -407,7 +446,7 @@ function editPet(){
             get.onsuccess = function(e){
                 var result = e.target.result;
 
-
+				//Verifica se o id informado é valido
                 if(typeof result !== "undefined"){
                     if(newPetName === ""){
                         newPetName = result.petName;
@@ -433,7 +472,7 @@ function editPet(){
                         age: Number(newAge),
                         login: result.login
                     };
-
+					//Atualiza os valores no banco de dados
                     var update = store.put(pet);
 
                 }
@@ -448,6 +487,7 @@ function editPet(){
 
 }
 
+//Funcao para editar o proprio usuario
 function editProfile(){
     $(document).ready(function(){
         var newName = $("#newName").val();
@@ -463,7 +503,7 @@ function editProfile(){
         var empty_password = 0;
 
         var request = indexedDB.open("petshop", 3);
-
+		//Pega os valores das caixas
         request.onsuccess = function(event){
             var db = event.target.result;
 
@@ -473,11 +513,11 @@ function editProfile(){
 
             var get = store.get(loggedUser);
 
-
+			
             get.onsuccess = function(e){
                 var result = e.target.result;
 
-
+				//Verifica se o id eh valido
                 if(typeof result !== "undefined"){
                     if(newName === ""){
                         newName = result.name;
@@ -509,7 +549,7 @@ function editProfile(){
                 }
 
 
-
+				//Prepara o novo usuario para ser atualizado no banco de dados
                 var user = {
                     name: newName,
                     photo: newPhoto,
@@ -522,11 +562,12 @@ function editProfile(){
                 };
 
                 console.log(newPhoto);
-
+				//Verifica se as senhas inseridas sao iguais
                 if(newPassWord === newPassWord2){
                     if(newPassWord === oldPassWord && newPassWord !== "" && empty_password == 0){
                         alert("A senha deve ser distinta da anterior");
                     }else{
+						//Atualiza no banco de dados
                         var update = store.put(user);
 
                         update.onsuccess = function(){
@@ -548,6 +589,7 @@ function editProfile(){
     });
 }
 /*----------------------------------------------------------------------------*/
+//Funcao que carrega o card de foto e o nome de usuario quando é logado
 function userCard(name, photo){
     $(document).ready( function(){
         $("#mutableCard").load("../html/usercard.html", function(){
@@ -557,6 +599,7 @@ function userCard(name, photo){
     });
 }
 
+//funcao que carrega o card de foto e o nome de administrador quando eh logado
 function adminCard(name, photo){
     $(document).ready( function(){
         $("#mutableCard").load("../html/admincard.html", function(){
@@ -569,24 +612,28 @@ function adminCard(name, photo){
     });
 }
 
+//Carrega o html da parte do card de login
 function loginCard(){
     $(document).ready( function(){
         $("#mutableCard").load("../html/logincard.html");
     });
 }
 
+//carrega a barra de navegacao do usuario
 function userNavBar(){
     $(document).ready( function(){
         $("#mutableNavBar").load("../html/usernavbar.html");
     });
 }
 
+//Carrega a barra de navegacao quando n esta logado
 function guestNavBar(){
     $(document).ready( function(){
         $("#mutableNavBar").load("../html/guestnavbar.html");
     });
 }
 
+//carrega a barra de navegacao do administrador
 function adminNavBar(){
     $(document).ready( function(){
         $("#mutableNavBar").load("../html/adminnavbar.html");
@@ -594,13 +641,15 @@ function adminNavBar(){
 }
 /*----------------------------utilidades--------------------------------------*/
 
+//Funcao que deleta o animal do usuario do banco de dados
 function deletePet(id){
     $(document).ready( function(){
         if(confirm("Deseja mesmo deletar esse Animal?")){
             var request = indexedDB.open("petshop", 3);
 
             request.onsuccess = function(event){
-                var db = event.target.result
+                //Abre o banco de dados e deleta o id selecionado
+				var db = event.target.result
 
                 var transaction = db.transaction(["Animais"], "readwrite");
 
@@ -616,15 +665,17 @@ function deletePet(id){
     });
 }
 
+//Funcao para carregar os valores nas txtbox da pagina de servicos
 function carregarServico(){
 	$(document).ready( function(){
         try{
             var id = $("#ID").val();
-
+			//Verifica se o id foi prrenchido
             if(id !== ""){
 
 				var request = indexedDB.open("petshop", 3);
-
+				
+				//Abre o bd e a tabela de servicos
 				request.onsuccess = function(event){
 					var db = event.target.result;
 					var transaction = db.transaction(["Servicos"], "readwrite");
@@ -632,10 +683,11 @@ function carregarServico(){
 					var request = store.get(Number(id));
 
 					request.onsuccess = function(e){
-
+						
+						//Verifica se o id existe
 						var result = e.target.result;
 						if(typeof result !== "undefined"){
-
+							//Poe os valores nas txtbox
 							document.getElementById("productName").value = request.result.name;
 							document.getElementById("photo").src = request.result.photo;
 							document.getElementById("descricao").value = request.result.descricao;
@@ -704,6 +756,7 @@ function atualizarServico(){
     });
 }
 
+//Funcao que deleta o servico escolhido
 function deletarServico(){
 	$(document).ready( function(){
         try{
@@ -714,7 +767,7 @@ function deletarServico(){
 
             if(confirm("Quer mesmo deletar o servico?")){
 				if(id !== "" && name !== "" && descricao !== "" && preco !== ""){
-
+					//Verifica se os campos foram preenchidos
 					var request = indexedDB.open("petshop", 3);
 
 					request.onsuccess = function(event){
@@ -722,7 +775,7 @@ function deletarServico(){
 						var transaction = db.transaction(["Servicos"], "readwrite");
 						var store = transaction.objectStore("Servicos");
 
-
+						//Deleta o id e as informacoes associadas a aquele id
 						var request = store.delete(Number(id));
 						request.onsuccess = function(e){
 							alert("O id " + id + " foi deletado");
@@ -741,6 +794,8 @@ function deletarServico(){
     });
 }
 
+//Funcao de carregar produto
+//Funciona da mesma maneira q carregarServico()
 function carregarProduto(){
 	$(document).ready( function(){
         try{
@@ -784,6 +839,8 @@ function carregarProduto(){
     });
 }
 
+//Funcao de atualizar produto
+//Funciona da mesma maneira q atualizarServico()
 function atualizarProduto(){
 	$(document).ready( function(){
         try{
@@ -836,6 +893,8 @@ function atualizarProduto(){
     });
 }
 
+//Funcao de deletar produto
+//Funciona da mesma maneira q deletarServico()
 function deletarProduto(){
 	$(document).ready( function(){
         try{
@@ -876,13 +935,14 @@ function deletarProduto(){
     });
 }
 
+//Funcao para mudar o html da pagina, por exemplo na parte de listar servicos e produtos
 function changeHMTL(table, n, id){
-    if(id === "#estoque"){
+    if(id === "#estoque"){		//Listar produtos
         var eachline = "<tr><th>Id</th><th>Nome</th><th>Descrição</th><th>Preço</th><th>Quantidade em estoque</th><th>Quantidade vendida</th></tr>";
         for(i=0; i<n; i++){
             eachline += "<tr><td>"+ table[i].id.toString()+"</td><td>"+ table[i].name+"</td><td>"+table[i].descricao+"</td><td>"+table[i].preco.toString()+"</td><td>"+table[i].qtd_estoque.toString()+"</td><td>"+table[i].qtd_vendida.toString()+"</td></tr>";
         }
-    }else if(id === "#servicos"){
+    }else if(id === "#servicos"){		//Listar servicos
         var eachline = "<tr><th>Id</th><th>Nome</th><th>Descrição</th><th>Preço</th></tr>";
         for(i=0; i<n; i++){
             eachline += "<tr><td>"+ table[i].id.toString()+"</td><td>"+ table[i].name+"</td><td>"+table[i].descricao+"</td><td>"+table[i].preco.toString()+"</td></tr>";
@@ -898,6 +958,7 @@ function changeHMTL(table, n, id){
     $(id).html(eachline);
 }
 
+//Funcao para listar os animais
 function listPets(){
     $(document).ready( function(){
         try{
@@ -905,7 +966,8 @@ function listPets(){
             var n = 0;
             var table;
             var request = indexedDB.open("petshop", 3);
-
+			
+			//Abre o banco de dados e abre a tabela de animais
             request.onsuccess = function(event){
                 var db = event.target.result;
 
@@ -918,14 +980,15 @@ function listPets(){
                 count.onsuccess = function(){
                     n = count.result;
                 };
-
+				
                 var getAll = store.getAll();
 
                 getAll.onsuccess = function(e){
                     table = e.target.result;
                     var table2 = [];
                     var n2 = 0;
-
+					
+					//Usa a funcao changeHTML para mudar o HTML da pagina de acordo com o que tem no banco de dados
                     for (i=0;i<n;i++){
                         if(table[i].login === loggedUser){
                             table2[n2] = table[i];
@@ -944,6 +1007,8 @@ function listPets(){
     });
 }
 
+//Funcao para listar os produtos
+//Funciona do mesmo jeito q a listPets()
 function listStock(){
     $(document).ready( function(){
         try{
@@ -983,6 +1048,8 @@ function listStock(){
     });
 }
 
+//Funcao para listar os servicos
+//Funciona do mesmo jeito q a listPets()
 function listServices(){
     $(document).ready( function(){
         try{
@@ -1021,6 +1088,7 @@ function listServices(){
 }
 
 
+//Funcao para registrar os administradores
 function registerAdmin(){
     $(document).ready( function(){
         try{
@@ -1033,6 +1101,7 @@ function registerAdmin(){
             var tel = $("#tel").val();
             var email = $("#email").val();
 
+			//Verifica se o q foi colocado nas txtbox n esta vazio
             if(name !== "" && login !== "" && passWord !== "" && passWord2 !== "" && address !== "" && tel !== "" && email !== ""){
                 if(passWord === passWord2){
 
@@ -1045,6 +1114,7 @@ function registerAdmin(){
 
 						var store = transaction.objectStore("Usuarios");
 
+						//Adiciona um novo cadastro no banco de dados na tabela usuarios
 						var user = {
 							name: name,
 							login: login,
@@ -1078,6 +1148,8 @@ function registerAdmin(){
     });
 }
 
+//Funcao para registrar os clientes
+//Funciona do mesmo jeito que registerAdmin()
 function registerClient(){
     $(document).ready( function(){
         try{
@@ -1136,6 +1208,8 @@ function registerClient(){
     });
 }
 
+//Funcao para registrar os produtos
+//Funciona do mesmo jeito que registerAdmin()
 function registerProduct(){
     $(document).ready( function(){
         try{
@@ -1186,6 +1260,8 @@ function registerProduct(){
     });
 }
 
+//Funcao para registrar os servicos
+//Funciona do mesmo jeito que registerAdmin()
 function registerService(){
     $(document).ready( function(){
         try{
@@ -1232,6 +1308,7 @@ function registerService(){
     });
 }
 
+//Funcao para fazer o login de usuario
 function userLogin(){
     try{
         var userName = document.getElementById("login").elements.namedItem("userName").value;
@@ -1240,7 +1317,7 @@ function userLogin(){
 
         console.log(userName);
         console.log(passWord);
-
+		//Pega os valores das txtbox do html
         var request = indexedDB.open("petshop", 3);
 
         request.onsuccess = function(event){
@@ -1250,7 +1327,8 @@ function userLogin(){
             var store = transaction.objectStore("Usuarios");
 
             var get = store.get(userName);
-
+			
+			//Verifica se o usuario e senha batem com o que tem no banco de dados
             get.onsuccess = function(e){
                 var result = e.target.result;
 
@@ -1275,6 +1353,9 @@ function userLogin(){
     }
 }
 
+//Funcao para fazer o login de administrador
+//Funciona da mesma maneira que o userLogin()
+//Faz uma checagem para ver se o usuario tem acesso de administrador
 function adminLogin(){
     try{
         var userName = document.getElementById("login").elements.namedItem("userName").value;
@@ -1319,6 +1400,7 @@ function adminLogin(){
     }
 }
 
+//Funcao para deslogar do site
 function logout(){
     try{
         guestNavBar();
