@@ -117,6 +117,7 @@ function goToStockManager(){
 //Se o state for igual a 0, é necessario mudar as colunas laterais e a coluna do meio do HTML
 function goToBuy(){
     $(document).ready( function(){
+
         if(state == 0){
             $("#mutableContent").load("../html/buy.html");
             document.body.style.backgroundImage = "none";
@@ -195,7 +196,7 @@ function goToFinalizeBuy(){
 
             db.close();
         };
-
+        changeHTML(0,0, '#cartList');
         $("#mutableMiddleColumn").load("../html/colunameioprodutocartao.html");
         state = 1;
     });
@@ -946,8 +947,14 @@ function deletarProduto(){
 
 //Funcao para mudar o html da pagina, por exemplo na parte de listar servicos e produtos
 function changeHTML(table, n, id){
-    if (id === "#finalizeBuy") {
-        var eachline = 'Preço: '+ n +'<br>Cartão de Crédito: <input name="quantCompra"><br><button class="btn" type="button">Finalizar</button>';
+    if (id === '#cartList') {
+        var eachline = "";
+        for (var item in cart) {
+            eachline += '<li><img class="imgProdProdutoCartaoCliente" src="../assets/Ppurina.jpg" scrolling="no" alt="Instagram"/><br>'+ cart[item].name +'<br>Quantidade: '+ cart[item].quant +'<br></li>';
+        }
+    } else if (id === "#finalizeBuy") {
+        var valor = Math.round(n*100)/100;
+        var eachline = 'Preço: '+ valor +'<br>Cartão de Crédito: <input name="quantCompra"><br><button class="btn" type="button">Finalizar</button>';
     } else if(id === "#estoque"){		//Listar produtos
         var eachline = "<tr><th>Id</th><th>Nome</th><th>Descrição</th><th>Preço</th><th>Quantidade em estoque</th><th>Quantidade vendida</th></tr>";
         for(i=0; i<n; i++){
@@ -965,7 +972,7 @@ function changeHTML(table, n, id){
             eachline += '<li><img src='+ table[i].petPhoto+ ' alt="Someone" style="width:130px; height:130px;"><br>Nome: ' + table[i].petName + "<br>Raça: " + table[i].race + "<br>Idade: " + table[i].age + "<br>" + '<a><button class="btn" type="button" onClick="goToEditPet('+table[i].id+');">Atualizar</button></a><button class="btn" type="button" onclick="deletePet('+table[i].id+')">Deletar</button><br></li>';
         }
     }
-
+    console.log("id: "+id);
     $(id).html(eachline);
 }
 
