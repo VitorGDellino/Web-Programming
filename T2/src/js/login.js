@@ -224,6 +224,17 @@ function finishingSale(totalValue) {
     };
 }
 
+function afterBuy() {
+    numero = document.getElementById("cartaoInput").value;
+    console.log(numero);
+    if (numero == "") {
+        alert('O numero do cartao deve ser preenchido!');
+    } else {
+        alert('compra realizada com sucesso!');
+        goToHome();
+    }
+}
+
 function updateStorage(product_id, quantidadeVendida) {
     var request = indexedDB.open("petshop", 3);
     console.log("id: "+product_id);
