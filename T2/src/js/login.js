@@ -196,15 +196,13 @@ function goToFinalizeBuy(){
             db.close();
         };
 
-
-        // console.log(document.getElementById('#finalizeBuy').innerHTML);
-
         $("#mutableMiddleColumn").load("../html/colunameioprodutocartao.html");
         state = 1;
     });
 }
 
 function finishingSale(totalValue) {
+    changeHTML(0, totalValue, '#finalizeBuy');
     var request = indexedDB.open("petshop", 3);
     request.onsuccess = function(event) {
         var db = event.target.result;
@@ -387,8 +385,8 @@ function registerPet(){
             var race = $("#race").val();
             var petPhoto = $("#photo").attr('src');
             var age = $("#age").val();
-			
-			//Pega os valoresde cada txtbox do html e verifica se foram preenchidas 
+
+			//Pega os valoresde cada txtbox do html e verifica se foram preenchidas
             if (petName !== "" && race !== "" && age !== "") {
                 var request = indexedDB.open("petshop", 3);
                 request.onsuccess = function(e) {
@@ -433,7 +431,7 @@ function editPet(){
 
         var request = indexedDB.open("petshop", 3);
 		//pega os valores das caixas
-	
+
         request.onsuccess = function(event){
             var db = event.target.result;
 
@@ -513,7 +511,7 @@ function editProfile(){
 
             var get = store.get(loggedUser);
 
-			
+
             get.onsuccess = function(e){
                 var result = e.target.result;
 
@@ -674,7 +672,7 @@ function carregarServico(){
             if(id !== ""){
 
 				var request = indexedDB.open("petshop", 3);
-				
+
 				//Abre o bd e a tabela de servicos
 				request.onsuccess = function(event){
 					var db = event.target.result;
@@ -683,7 +681,7 @@ function carregarServico(){
 					var request = store.get(Number(id));
 
 					request.onsuccess = function(e){
-						
+
 						//Verifica se o id existe
 						var result = e.target.result;
 						if(typeof result !== "undefined"){
@@ -936,8 +934,10 @@ function deletarProduto(){
 }
 
 //Funcao para mudar o html da pagina, por exemplo na parte de listar servicos e produtos
-function changeHMTL(table, n, id){
-    if(id === "#estoque"){		//Listar produtos
+function changeHTML(table, n, id){
+    if (id === "#finalizeBuy") {
+        var eachline = 'Preço: '+ n +'<br>Cartão de Crédito: <input name="quantCompra"><br><button class="btn" type="button">Finalizar</button>';
+    } else if(id === "#estoque"){		//Listar produtos
         var eachline = "<tr><th>Id</th><th>Nome</th><th>Descrição</th><th>Preço</th><th>Quantidade em estoque</th><th>Quantidade vendida</th></tr>";
         for(i=0; i<n; i++){
             eachline += "<tr><td>"+ table[i].id.toString()+"</td><td>"+ table[i].name+"</td><td>"+table[i].descricao+"</td><td>"+table[i].preco.toString()+"</td><td>"+table[i].qtd_estoque.toString()+"</td><td>"+table[i].qtd_vendida.toString()+"</td></tr>";
@@ -966,7 +966,7 @@ function listPets(){
             var n = 0;
             var table;
             var request = indexedDB.open("petshop", 3);
-			
+
 			//Abre o banco de dados e abre a tabela de animais
             request.onsuccess = function(event){
                 var db = event.target.result;
@@ -980,14 +980,14 @@ function listPets(){
                 count.onsuccess = function(){
                     n = count.result;
                 };
-				
+
                 var getAll = store.getAll();
 
                 getAll.onsuccess = function(e){
                     table = e.target.result;
                     var table2 = [];
                     var n2 = 0;
-					
+
 					//Usa a funcao changeHTML para mudar o HTML da pagina de acordo com o que tem no banco de dados
                     for (i=0;i<n;i++){
                         if(table[i].login === loggedUser){
@@ -995,7 +995,7 @@ function listPets(){
                             n2++;
                         }
                     }
-                    changeHMTL(table2, n2, "#pets");
+                    changeHTML(table2, n2, "#pets");
                 };
 
                 db.close();
@@ -1036,7 +1036,7 @@ function listStock(){
 
                 getAll.onsuccess = function(e){
                     table = e.target.result;
-                    changeHMTL(table, n, "#estoque");
+                    changeHTML(table, n, "#estoque");
                 };
 
                 db.close();
@@ -1075,7 +1075,7 @@ function listServices(){
 
                 getAll.onsuccess = function(e){
                     table = e.target.result;
-                    changeHMTL(table, n, "#servicos");
+                    changeHTML(table, n, "#servicos");
                 };
 
                 db.close();
@@ -1327,7 +1327,7 @@ function userLogin(){
             var store = transaction.objectStore("Usuarios");
 
             var get = store.get(userName);
-			
+
 			//Verifica se o usuario e senha batem com o que tem no banco de dados
             get.onsuccess = function(e){
                 var result = e.target.result;
