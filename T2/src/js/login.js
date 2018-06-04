@@ -115,19 +115,15 @@ function insertInCart (product) {
     var quantity = document.getElementById(product).value;
     var hasUpdate = false;
     if(quantity != "") {
-        // cart[product] = parseInt(quantity);
         aux = {
             name: product,
             quant: parseInt(quantity)
         };
-        // cart.push(aux);
         for (var item in cart) {
-            // console.log(item);
             if (cart[item].name == product) {//Este produto ja esta inserido
                 //atualiza somente a quantidade dele
                 cart[item].quant = parseInt(quantity);
                 hasUpdate = true;
-                // console.log("entrou aqui no update");
             }
         }
 
@@ -135,9 +131,7 @@ function insertInCart (product) {
             cart.push(aux);
             hasUpdate = false;
         }
-
     } else {
-        // delete cart[product];
         for (var elem in cart) {
             if (cart[elem].name == product) {
                 delete cart[elem];
@@ -164,7 +158,6 @@ function goToFinalizeBuy(){
             };
             var getAll = store.getAll();
             getAll.onsuccess = function(e){
-
                 for (var item_cart in cart) { //checa se os a quantidade pedida esta disponivel em estoque e calcula o valor final da compra
                     for (var item_bd in e.target.result) {
                         if (cart[item_cart].name == e.target.result[item_bd].name) {
@@ -174,21 +167,78 @@ function goToFinalizeBuy(){
                                 cart = [];
                                 break;
                             } else {
-                                //TODO atualiar bd, retirando do estoque do produto e colocando no itens vendidos
-                                valorDaCompra = valorDaCompra + e.target.result[item_bd].preco * cart[item_cart].quant;
+                                valorDaCompra += e.target.result[item_bd].preco * cart[item_cart].quant;
+                                updateStorage(item_bd, cart[item_cart].quant);
                             }
                         }
                     }
                 }
-                console.log("valor da compra: "+valorDaCompra);
+                finishingSale(valorDaCompra);
             };
-        //
+
             db.close();
         };
+
+
+        // console.log(document.getElementById('#finalizeBuy').innerHTML);
 
         $("#mutableMiddleColumn").load("../html/colunameioprodutocartao.html");
         state = 1;
     });
+}
+
+function finishingSale(totalValue) {
+    var request = indexedDB.open("petshop", 3);
+    request.onsuccess = function(event) {
+        var db = event.target.result;
+        var transaction = db.transaction(["Vendas"], "readwrite");
+        var store = transaction.objectStore("Vendas");
+        var itens = "";
+        for (var item_cart in cart) {
+            itens += cart[item_cart].name + "," + cart[item_cart].quant + ". ";
+        }
+        console.log(totalValue);
+        var venda = {
+            user: loggedUser,
+            itens: itens,
+            total: totalValue
+        };
+        var request = store.add(venda);
+
+        db.close();
+    };
+}
+
+function updateStorage(product_id, quantidadeVendida) {
+    var request = indexedDB.open("petshop", 3);
+    console.log("id: "+product_id);
+
+    request.onsuccess = function(event){
+        var db = event.target.result;
+        var transaction = db.transaction(["Estoque"], "readwrite");
+        var store = transaction.objectStore("Estoque");
+        var get = store.get(product_id);
+
+        get.onsuccess = function(e) {
+            var result = e.target.result;
+            if(typeof result !== "undefined"){
+                var produto = {
+                    name: result.name,
+                    photo: result.photo,
+                    descricao: resulta.descricao,
+                    preco: result.preco,
+                    qtd_estoque: result.qtd_estoque - quantidadeVendida,
+                    qtd_vendida: result.qtd_vendida + quantidadeVendida
+                };
+                var update = store.put(produto);
+                update.onssuccess = function(e) {
+                    console.log("fechou o produto");
+                }
+            }
+        };
+
+        db.close();
+    };
 }
 
 function goToEditRegister(){
@@ -582,10 +632,10 @@ function carregarServico(){
 					var request = store.get(Number(id));
 
 					request.onsuccess = function(e){
-						
+
 						var result = e.target.result;
 						if(typeof result !== "undefined"){
-							
+
 							document.getElementById("productName").value = request.result.name;
 							document.getElementById("photo").src = request.result.photo;
 							document.getElementById("descricao").value = request.result.descricao;
@@ -707,10 +757,10 @@ function carregarProduto(){
 					var request = store.get(Number(id));
 
 					request.onsuccess = function(e){
-						
+
 						var result = e.target.result;
 						if(typeof result !== "undefined"){
-							
+
 							document.getElementById("productName").value = request.result.name;
 							document.getElementById("photo").src = request.result.photo;
 							document.getElementById("descricao").value = request.result.descricao;
@@ -722,7 +772,7 @@ function carregarProduto(){
 							alert("O ID não existe");
 						}
 					};
-					
+
 					db.close();
 				}
             }else{

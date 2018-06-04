@@ -14,6 +14,7 @@ $(document).ready( function(){
         var stock = db.createObjectStore("Estoque", {keyPath: "id", autoIncrement: true});
         var services = db.createObjectStore("Servicos", {keyPath: "id", autoIncrement: true});
         var pet = db.createObjectStore("Animais", {keyPath: "id", autoIncrement: true});
+        var sales = db.createObjectStore("Vendas", {keypath: "id", autoIncrement: true});
 
         var transaction = event.target.transaction;
 
@@ -156,8 +157,8 @@ $(document).ready( function(){
 			photo: "/assets/whiskas.jpg",
             descricao: "Racao para gato",
             preco: 19.90,
-            qtd_estoque: 150,
-            qtd_vendida: 89
+            qtd_estoque: 100,
+            qtd_vendida: 100
         }
 
         add = store.add(product);
