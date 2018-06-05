@@ -92,7 +92,7 @@ $(document).ready( function(){
             preco: 89.99,
 			hora: 10,
 			date: "2018-06-08",
-			reserva: "none"
+			reserva: "Yuki"
         };
 
         add = store.add(service);
