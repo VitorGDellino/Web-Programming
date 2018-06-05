@@ -238,6 +238,7 @@ function finalizeBuy(){
         };
 
         changeHTML(0,0, '#cartList');
+    });
 }
 
 function listBuy(){
@@ -282,7 +283,6 @@ function goToFinalizeBuy(){
         $("#mutableMiddleColumn").load("../html/colunameioprodutocartao.html");
         state = 1;
         finalizeBuy();
-    });
 }
 
 function finishingSale(totalValue) {
@@ -431,9 +431,10 @@ function goToRegisterProduct(){
 }
 
 //Funcao que carrega a pagina de selecionar horario para fazer o agendamento de servico
-function goToSelectHour(){
+function goToSelectHour(table2, n2, id){
 	$("#mutableMiddleColumn").load("../html/colunaMeioCalendarioServicosEscolherHorario.html");
     state = 1;
+    changeHTML(table2, n2, id);
 }
 
 //Funcao que carrega a pagina de fazer o cadastro do agendamento de servico
@@ -1053,6 +1054,19 @@ function changeHTML(table, n, id){
         for(i=0; i<n; i++){
             eachline += '<li><img class="imgProdProdutoCartaoCliente" src="'+ table[i].photo+'" scrolling="no" alt="Produto"/><br>'+table[i].name+'<br>Preco: '+table[i].preco+'<br><input id="'+table[i].name+'" name="quantCompra" type="number" min="0"><a  class="icons" onclick="insertInCart('+table[i].name+');"><img class="image" src="/assets/AddShop.png" alt="Carrinho"/></a></li>'
         }
+
+    }else if(id === "#reservas"){		//Listar reservas
+        eachline="";
+        for(i=0; i<n; i++){
+            console.log(n);
+            console.log("Cheguei aqui no changeHTML");
+			if(table[i].reserva==="none"){
+                console.log("aqui");
+				eachline += '<li><font size="3"> HORÁRIO LIVRE </font>Servico: '+table[i].name+'<br><img src="'+table[i].photo+'" alt="Someone" style="width:130px; height:130px;"><br>Animal: '+table[i].reserva+'</li>';
+			}else{
+				eachline += '<li><font size="3" color="red"> HORÁRIO RESERVADO </font><img src='+ table[i].photo+ ' alt="Someone" style="width:130px; height:130px;"><br>Nome: ' + table[i].name + "<br>Preco: " + table[i].preco + "<br>hora: " + table[i].hora + "<br>Reserva: " + table[i].reserva + "<br>" + '<a><button class="btn" type="button" disabled">Reservar</button></a></li>';
+			}
+		}
     }else{
         eachline="";
         for(i=0; i<n; i++){
@@ -1060,8 +1074,63 @@ function changeHTML(table, n, id){
             eachline += '<li><img src='+ table[i].petPhoto+ ' alt="Someone" style="width:130px; height:130px;"><br>Nome: ' + table[i].petName + "<br>Raça: " + table[i].race + "<br>Idade: " + table[i].age + "<br>" + '<a><button class="btn" type="button" onClick="goToEditPet('+table[i].id+');">Atualizar</button></a><button class="btn" type="button" onclick="deletePet('+table[i].id+')">Deletar</button><br></li>';
         }
     }
-
+    console.log(id);
     $(id).html(eachline);
+}
+
+function listScheduleService(){
+    $(document).ready( function(){
+        try{
+            var date = $("#Calendario").val();
+			console.log(date);
+            var n = 0;
+            var table;
+            var request = indexedDB.open("petshop", 3);
+
+			//Abre o banco de dados e abre a tabela de animais
+            request.onsuccess = function(event){
+                var db = event.target.result;
+
+                var transaction = db.transaction(["Servicos"], "readwrite");
+
+                var store = transaction.objectStore("Servicos");
+
+                var count = store.count();
+
+                count.onsuccess = function(){
+                    n = count.result;
+                };
+
+                var getAll = store.getAll();
+
+                getAll.onsuccess = function(e){
+                    table = e.target.result;
+                    var table2 = [];
+                    var n2 = 0;
+					//console.log(table[0].date);
+
+					//Usa a funcao changeHTML para mudar o HTML da pagina de acordo com o que tem no banco de dados
+                    for (i=0;i<n;i++){
+                        if(table[i].date === date){
+                            table2[n2] = table[i];
+                            n2++;
+                        }
+                    }
+
+					if(n2!==0){
+                        changeHTML(table2, n2, "#reservas");
+					}else{
+						alert("Não tem servico nesse dia");
+					}
+                };
+
+                db.close();
+            };
+
+        }catch(err){
+            console.log(err.message);
+        }
+    });
 }
 
 //Funcao para listar os animais
