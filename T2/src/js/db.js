@@ -65,7 +65,10 @@ $(document).ready( function(){
             name: "Banho",
 			photo: "/assets/banho.jpg",
             descricao: "Lavagem de animais",
-            preco: 59.99
+            preco: 59.99,
+			hora: 8,
+			date: "2018-06-09",
+			reserva: "none"
         };
 
         add = store.add(service);
@@ -74,7 +77,10 @@ $(document).ready( function(){
             name: "Tosa",
 			photo: "/assets/tosa.jpg",
             descricao: "Tosa de animais",
-            preco: 25.99
+            preco: 25.99,
+			hora: 9,
+			date: "2018-06-08",
+			reserva: "none"
         };
 
         add = store.add(service);
@@ -83,7 +89,10 @@ $(document).ready( function(){
             name: "Veterinario de plantao",
 			photo: "/assets/vet.png",
             descricao: "Checar a disponibilidade de um veterinario",
-            preco: 89.99
+            preco: 89.99,
+			hora: 10,
+			date: "2018-06-08",
+			reserva: "none"
         };
 
         add = store.add(service);
@@ -92,16 +101,10 @@ $(document).ready( function(){
             name: "Adestramento",
 			photo: "/assets/adestramento.jpg",
             descricao: "Serviço de adestramento de animais",
-            preco: 150
-        };
-
-        add = store.add(service);
-
-        service = {
-            name: "Loja física",
-			photo: "/assets/loja.jpg",
-            descricao: "Checar localizacao de nossas lojas",
-            preco: 0
+            preco: 150,
+			hora: 11,
+			date: "2018-06-07",
+			reserva: "none"
         };
 
         add = store.add(service);

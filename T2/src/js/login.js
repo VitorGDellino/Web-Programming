@@ -965,6 +965,17 @@ function changeHTML(table, n, id){
         for(i=0; i<n; i++){
             eachline += "<tr><td>"+ table[i].id.toString()+"</td><td>"+ table[i].name+"</td><td>"+table[i].descricao+"</td><td>"+table[i].preco.toString()+"</td></tr>";
         }
+    }else if(id === "#reservas"){		//Listar reservas
+        eachline="";
+        for(i=0; i<n; i++){
+            console.log(n);
+            console.log("Cheguei aqui no changeHTML");
+			if(table[i].reserva==="none"){
+				eachline += '<li><img src='+ table[i].photo+ ' alt="Someone" style="width:130px; height:130px;"><br>Nome: ' + table[i].name + "<br>Preco: " + table[i].preco + "<br>hora: " + table[i].hora + "<br>Reserva: " + table[i].reserva + "<br>" + '<a><button class="btn" type="button" onClick="goToEditPet('+table[i].id+');">Reservar</button></a></li>';
+			}else{
+				eachline += '<li><img src='+ table[i].photo+ ' alt="Someone" style="width:130px; height:130px;"><br>Nome: ' + table[i].name + "<br>Preco: " + table[i].preco + "<br>hora: " + table[i].hora + "<br>Reserva: " + table[i].reserva + "<br>" + '<a><button class="btn" type="button" disabled">Reservar</button></a></li>';
+			}
+		}
     }else{
         eachline="";
         for(i=0; i<n; i++){
@@ -974,6 +985,60 @@ function changeHTML(table, n, id){
     }
     console.log("id: "+id);
     $(id).html(eachline);
+}
+
+function listScheduleService(){
+    $(document).ready( function(){
+        try{
+            var date = $("#Calendario").val();
+			console.log(date);
+            var n = 0;
+            var table;
+            var request = indexedDB.open("petshop", 3);
+
+			//Abre o banco de dados e abre a tabela de animais
+            request.onsuccess = function(event){
+                var db = event.target.result;
+
+                var transaction = db.transaction(["Servicos"], "readwrite");
+
+                var store = transaction.objectStore("Servicos");
+
+                var count = store.count();
+
+                count.onsuccess = function(){
+                    n = count.result;
+                };
+
+                var getAll = store.getAll();
+
+                getAll.onsuccess = function(e){
+                    table = e.target.result;
+                    var table2 = [];
+                    var n2 = 0;
+					//console.log(table[0].date);
+					
+					//Usa a funcao changeHTML para mudar o HTML da pagina de acordo com o que tem no banco de dados
+                     for (i=0;i<n;i++){
+                        if(table[i].date === date){
+                            table2[n2] = table[i];
+                            n2++;
+                        }
+                    }
+					if(n2!==0){
+						changeHTML(table2, n2, "#reservas");
+					}else{
+						alert("Não tem servico nesse dia");
+					}
+                };
+
+                db.close();
+            };
+
+        }catch(err){
+            console.log(err.message);
+        }
+    });
 }
 
 //Funcao para listar os animais
