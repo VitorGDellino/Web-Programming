@@ -1083,22 +1083,13 @@ function Reservar(id){
 	$(document).ready( function(){
 		var pet = $("#pet").val();
 		console.log(pet);
-<<<<<<< HEAD
-		
+
 		if(pet!==null){
 			var request = indexedDB.open("petshop", 3);
-			
+
 			request.onsuccess = function(event){
 				//Abre o banco de dados e deleta o id selecionado
 				var db = event.target.result
-=======
-
-		var request = indexedDB.open("petshop", 3);
-
-		request.onsuccess = function(event){
-			//Abre o banco de dados e deleta o id selecionado
-			var db = event.target.result
->>>>>>> 0cdaedbe5c8bc47a3e1f1fb35f9bff25e0ff5ff4
 
 				var transaction = db.transaction(["Servicos"], "readwrite");
 
@@ -1111,23 +1102,13 @@ function Reservar(id){
 					data.reserva = pet;
 					// console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
 
-<<<<<<< HEAD
 					var requestUpdate = store.put(data);
 					requestUpdate.onsuccess = function(event){
 						alert("O id " + id + " foi atualizado");
 					}
 				};
-				
-				db.close();
-=======
-				var requestUpdate = store.put(data);
-				requestUpdate.onsuccess = function(event){
-					alert("O id " + id + " foi atualizado");
-				}
-			};
 
-			db.close();
->>>>>>> 0cdaedbe5c8bc47a3e1f1fb35f9bff25e0ff5ff4
+				db.close();
 
 				goToSchedule();
 			};
