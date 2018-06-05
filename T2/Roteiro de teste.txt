@@ -1,4 +1,4 @@
-Logar como admin
+﻿Logar como admin
 	Username: Vitor
 	Senha: 1234
 
@@ -32,7 +32,10 @@ Agendar horario
 	Escolha o dia(serviço nos dias 7, 8 e 9 de junho), selecione o animal que vai usar o servico, preencha o cartao de credito, aperte no botao reservar do serviço escolhido
 	
 Comprar produto
-	//
+	Selecione a quantidade de cada produto e clique no carrinho respectivo do produto, coloque o cartao de credito e clique em finalizar
+
+Editar Registro
+	Mude o que quiser do proprio login
 
 Cadastrar/Listar animais
 	Lista os animais ja cadastrados
@@ -41,9 +44,9 @@ Cadastrar animais
 	Preencha os campos com o que preferir e clique em finalizar
 
 Atualizar animais
-//
+	Clique no botao atualizar e mude os campos que voce quer alterar, os que voce nao quiser alterar deixe em branco
 
 Deletar animais
-//
+	Clique no botao de deletar e confirme
 
 Clique no botao logout e logue como o administrador cadastrado anteriormente
