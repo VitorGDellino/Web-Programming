@@ -1070,7 +1070,7 @@ function changeHTML(table, n, id){
         for(i=0; i<n; i++){
 			eachline += ' <option value="'+ table[i].petName +'">' + table[i].petName + '</option>'	
         }
-		eachline += '</select>' + "<br><br>" + 'Cartão de Crédito: <input type="number">'
+		eachline += '</select>' + "<br><br>" + 'Cartão de Crédito: <input type="text">'
 
     }else if(id === "#reservas"){		//Listar reservas
         var eachline="";
@@ -1099,33 +1099,37 @@ function Reservar(id){
 		var pet = $("#pet").val();
 		console.log(pet);
 		
-		var request = indexedDB.open("petshop", 3);
-		
-		request.onsuccess = function(event){
-			//Abre o banco de dados e deleta o id selecionado
-			var db = event.target.result
-
-			var transaction = db.transaction(["Servicos"], "readwrite");
-
-			var store = transaction.objectStore("Servicos");
-
-			var request = store.get(Number(id));
-
-			request.onsuccess = function(e){
-				var data = request.result;
-				data.reserva = pet;
-				// console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
-
-				var requestUpdate = store.put(data);
-				requestUpdate.onsuccess = function(event){
-					alert("O id " + id + " foi atualizado");
-				}
-			};
+		if(pet!==null){
+			var request = indexedDB.open("petshop", 3);
 			
-			db.close();
+			request.onsuccess = function(event){
+				//Abre o banco de dados e deleta o id selecionado
+				var db = event.target.result
 
-			goToSchedule();
-		};
+				var transaction = db.transaction(["Servicos"], "readwrite");
+
+				var store = transaction.objectStore("Servicos");
+
+				var request = store.get(Number(id));
+
+				request.onsuccess = function(e){
+					var data = request.result;
+					data.reserva = pet;
+					// console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
+
+					var requestUpdate = store.put(data);
+					requestUpdate.onsuccess = function(event){
+						alert("O id " + id + " foi atualizado");
+					}
+				};
+				
+				db.close();
+
+				goToSchedule();
+			};
+		}else{
+			alert("Cadastre um animal antes");
+		}
     });
 }
 
