@@ -5,7 +5,6 @@ loggedUser = "";
 pet_id = 0;
 cart = [];
 
-//window.location.reload(true);
 //Funcao que carrega a pagina Home
 function goToHome(){
     $(document).ready( function(){
@@ -113,9 +112,48 @@ function goToStockManager(){
     });
 }
 
+function listProductsToBuy(){
+    $(document).ready( function(){
+        try{
+
+            var n = 0;
+            var table;
+            var request = indexedDB.open("petshop", 3);
+
+			//Abre o banco de dados e abre a tabela de animais
+            request.onsuccess = function(event){
+                var db = event.target.result;
+
+                var transaction = db.transaction(["Estoque"], "readwrite");
+
+                var store = transaction.objectStore("Estoque");
+
+                var count = store.count();
+
+                count.onsuccess = function(){
+                    n = count.result;
+                };
+
+                var getAll = store.getAll();
+
+                getAll.onsuccess = function(e){
+                    table = e.target.result;
+                    changeHTML(table, n, "#buy");
+                };
+
+                db.close();
+            };
+
+        }catch(err){
+            console.log(err.message);
+        }
+    });
+
+}
+
 //Funcao que carrega a pagina de comprar produto
 //Se o state for igual a 0, é necessario mudar as colunas laterais e a coluna do meio do HTML
-function goToBuy(){
+function goToBuy (){
     $(document).ready( function(){
 
         if(state == 0){
@@ -124,13 +162,16 @@ function goToBuy(){
         }else{
             $("#mutableMiddleColumn").load("../html/colunameiobuy.html");
         }
+
+        listProductsToBuy();
         state = 1;
     });
 }
 
 
-function insertInCart (product) {
-    var quantity = document.getElementById(product).value;
+function insertInCart(product){
+    console.log(product.id)
+    var quantity = $("#"+product.id).val();
     var hasUpdate = false;
     if(quantity != "") {
         aux = {
@@ -159,8 +200,7 @@ function insertInCart (product) {
     console.log(cart);
 }
 
-
-function goToFinalizeBuy(){
+function finalizeBuy(){
     $(document).ready( function(){
         var valorDaCompra = 0;
 
@@ -196,9 +236,52 @@ function goToFinalizeBuy(){
 
             db.close();
         };
+
         changeHTML(0,0, '#cartList');
+}
+
+function listBuy(){
+    $(document).ready( function(){
+        try{
+
+            var n = 0;
+            var table;
+            var request = indexedDB.open("petshop", 3);
+
+			//Abre o banco de dados e abre a tabela de animais
+            request.onsuccess = function(event){
+                var db = event.target.result;
+
+                var transaction = db.transaction(["Estoque"], "readwrite");
+
+                var store = transaction.objectStore("Estoque");
+
+                var count = store.count();
+
+                count.onsuccess = function(){
+                    n = count.result;
+                };
+
+                var getAll = store.getAll();
+
+                getAll.onsuccess = function(e){
+                    table = e.target.result;
+                    changeHTML(table, n, "#cartList");
+                };
+
+                db.close();
+            };
+
+        }catch(err){
+            console.log(err.message);
+        }
+    });
+}
+
+function goToFinalizeBuy(){
         $("#mutableMiddleColumn").load("../html/colunameioprodutocartao.html");
         state = 1;
+        finalizeBuy();
     });
 }
 
@@ -965,6 +1048,11 @@ function changeHTML(table, n, id){
         for(i=0; i<n; i++){
             eachline += "<tr><td>"+ table[i].id.toString()+"</td><td>"+ table[i].name+"</td><td>"+table[i].descricao+"</td><td>"+table[i].preco.toString()+"</td></tr>";
         }
+    }else if(id === "#buy"){
+        eachline = ""
+        for(i=0; i<n; i++){
+            eachline += '<li><img class="imgProdProdutoCartaoCliente" src="'+ table[i].photo+'" scrolling="no" alt="Produto"/><br>'+table[i].name+'<br>Preco: '+table[i].preco+'<br><input id="'+table[i].name+'" name="quantCompra" type="number" min="0"><a  class="icons" onclick="insertInCart('+table[i].name+');"><img class="image" src="/assets/AddShop.png" alt="Carrinho"/></a></li>'
+        }
     }else{
         eachline="";
         for(i=0; i<n; i++){
@@ -972,7 +1060,7 @@ function changeHTML(table, n, id){
             eachline += '<li><img src='+ table[i].petPhoto+ ' alt="Someone" style="width:130px; height:130px;"><br>Nome: ' + table[i].petName + "<br>Raça: " + table[i].race + "<br>Idade: " + table[i].age + "<br>" + '<a><button class="btn" type="button" onClick="goToEditPet('+table[i].id+');">Atualizar</button></a><button class="btn" type="button" onclick="deletePet('+table[i].id+')">Deletar</button><br></li>';
         }
     }
-    console.log("id: "+id);
+
     $(id).html(eachline);
 }
 
