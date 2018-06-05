@@ -1,0 +1,49 @@
+Logar como admin
+	Username: Vitor
+	Senha: 1234
+
+Cadastro de cliente
+	Preencher os campos com o q preferir, mas lembrar do login e senha para usar depois
+
+Cadastro do administrador
+	Preencher os campos com o q preferir, mas lembrar do login e senha para usar depois
+	
+Cadastro de serviço
+	Fazer um cadastro de serviço, use numero inteiro no campo de horas
+	
+Atualizar um serviço
+	Preencha com um id, clique em carregar e depois altere o que quiser e clique em finalizar
+	
+Deletar um serviço
+	Preencha com um id, clique em carregar e depois clique em finalizar
+	
+Cadastro de produto
+	Fazer um cadastro de produto
+	
+Atualizar um produto
+	Preencha com um id, clique em carregar e depois altere o que quiser e clique em finalizar
+	
+Deletar um produto
+	Preencha com um id, clique em carregar e depois clique em finalizar
+	
+Clique no botao logout e logue com o usuario cadastrado anteriormente
+
+Agendar horario
+	Escolha o dia(serviço nos dias 7, 8 e 9 de junho), selecione o animal que vai usar o servico, preencha o cartao de credito, aperte no botao reservar do serviço escolhido
+	
+Comprar produto
+	//
+
+Cadastrar/Listar animais
+	Lista os animais ja cadastrados
+	
+Cadastrar animais
+	Preencha os campos com o que preferir e clique em finalizar
+
+Atualizar animais
+//
+
+Deletar animais
+//
+
+Clique no botao logout e logue como o administrador cadastrado anteriormente

@@ -1,4 +1,3 @@
-/*----------------FUNCOES RELACIONADAS A NAVEGACAO----------------------------*/
 //a variavel state é usada para saber se é necessario mudar as colunas laterais ou apenas a coluna do meio
 state = 0;
 loggedUser = "";
@@ -773,7 +772,9 @@ function carregarServico(){
 							document.getElementById("photo").src = request.result.photo;
 							document.getElementById("descricao").value = request.result.descricao;
 							document.getElementById("price").value = request.result.preco;
-							// //console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
+							document.getElementById("hour").value = request.result.hora;
+							document.getElementById("date").value = request.result.date;
+							// console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
 						}else{
 							alert("O ID não existe");
 						}
@@ -798,9 +799,11 @@ function atualizarServico(){
             var photo = $("#photo").attr('src');
 			var descricao = $("#descricao").val();
 			var preco = $("#price").val();
+            var hour = $("#hour").val();
+            var date = $("#date").val();
 
             if(confirm("Quer mesmo atualizar o servico?")){
-				if(id !== "" && name !== "" && descricao !== "" && preco !== ""){
+				if(id !== "" && name !== "" && descricao !== "" && preco !== "" && hour !== "" && date !== ""){
 
 					var request = indexedDB.open("petshop", 3);
 
@@ -816,7 +819,9 @@ function atualizarServico(){
 							data.photo = photo;
 							data.descricao = descricao;
 							data.preco = preco;
-							//console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
+							data.hora = hour,
+							data.date = date
+							// console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
 
 							var requestUpdate = store.put(data);
 								requestUpdate.onsuccess = function(event){
@@ -845,9 +850,11 @@ function deletarServico(){
 			var name = $("#productName").val();
 			var descricao = $("#descricao").val();
 			var preco = $("#price").val();
+            var hour = $("#hour").val();
+            var date = $("#date").val();
 
             if(confirm("Quer mesmo deletar o servico?")){
-				if(id !== "" && name !== "" && descricao !== "" && preco !== ""){
+				if(id !== "" && name !== "" && descricao !== "" && preco !== "" && hour !== "" && date !== ""){
 					//Verifica se os campos foram preenchidos
 					var request = indexedDB.open("petshop", 3);
 
@@ -1036,24 +1043,33 @@ function changeHTML(table, n, id){
             eachline += "<tr><td>"+ table[i].id.toString()+"</td><td>"+ table[i].name+"</td><td>"+table[i].descricao+"</td><td>"+table[i].preco.toString()+"</td></tr>";
         }
     }else if(id === "#buy"){
-        eachline = ""
+        var eachline = ""
         for(i=0; i<n; i++){
             eachline += '<li><img class="imgProdProdutoCartaoCliente" src="'+ table[i].photo+'" scrolling="no" alt="Produto"/><br>'+table[i].name+'<br>Preco: '+table[i].preco+'<br><input id="'+table[i].name+'" name="quantCompra" type="number" min="0"><a  class="icons" onclick="insertInCart('+table[i].name+');"><img class="image" src="/assets/AddShop.png" alt="Carrinho"/></a></li>'
         }
-    }else if(id === "#reservas"){		//Listar reservas
-        eachline="";
+
+    }else if(id === "#animais"){
+		console.log("ta entrando");
+        var eachline = ""
+		eachline += '<select id="pet">'
         for(i=0; i<n; i++){
-            //console.log(n);
-            //console.log("Cheguei aqui no changeHTML");
+			eachline += ' <option value="'+ table[i].petName +'">' + table[i].petName + '</option>'
+        }
+		eachline += '</select>' + "<br><br>" + 'Cartão de Crédito: <input type="number">'
+
+    }else if(id === "#reservas"){		//Listar reservas
+        var eachline="";
+        for(i=0; i<n; i++){
+            console.log(n);
 			if(table[i].reserva==="none"){
-                //console.log("aqui");
-				eachline += '<li><font size="3"> HORÁRIO LIVRE </font>Servico: '+table[i].name+'<br><img src="'+table[i].photo+'" alt="Someone" style="width:130px; height:130px;"><br>Animal: '+table[i].reserva+'</li>';
+                console.log("aqui");
+				eachline += '<li><font size="3"> HORÁRIO LIVRE </font>Servico: '+table[i].name+'<br><img src="'+table[i].photo+'" alt="Someone" style="width:130px; height:130px;"><br>Animal: '+table[i].reserva+"<br>" + '<br>Preço: R$'+table[i].preco+"<br>" + '<a><button class="btn" type="button" onClick="Reservar('+table[i].id+');">Reservar</button></a></li>';
 			}else{
-				eachline += '<li><font size="3" color="red"> HORÁRIO RESERVADO </font><img src='+ table[i].photo+ ' alt="Someone" style="width:130px; height:130px;"><br>Nome: ' + table[i].name + "<br>Preco: " + table[i].preco + "<br>hora: " + table[i].hora + "<br>Reserva: " + table[i].reserva + "<br>" + '<a><button class="btn" type="button" disabled">Reservar</button></a></li>';
+				eachline += '<li><font size="3" color="red"> HORÁRIO RESERVADO </font>Servico: '+table[i].name+'<br><img src="'+table[i].photo+'" alt="Someone" style="width:130px; height:130px;"><br>Animal: '+table[i].reserva+ "<br>" + '<a><button class="btn" type="button" disabled>Reservar</button></a></li>';
 			}
 		}
     }else{
-        eachline="";
+        var eachline="";
         for(i=0; i<n; i++){
             //console.log(n);
             eachline += '<li><img src='+ table[i].petPhoto+ ' alt="Someone" style="width:130px; height:130px;"><br>Nome: ' + table[i].petName + "<br>Raça: " + table[i].race + "<br>Idade: " + table[i].age + "<br>" + '<a><button class="btn" type="button" onClick="goToEditPet('+table[i].id+');">Atualizar</button></a><button class="btn" type="button" onclick="deletePet('+table[i].id+')">Deletar</button><br></li>';
@@ -1061,6 +1077,41 @@ function changeHTML(table, n, id){
     }
     //console.log(id);
     $(id).html(eachline);
+}
+
+function Reservar(id){
+	$(document).ready( function(){
+		var pet = $("#pet").val();
+		console.log(pet);
+
+		var request = indexedDB.open("petshop", 3);
+
+		request.onsuccess = function(event){
+			//Abre o banco de dados e deleta o id selecionado
+			var db = event.target.result
+
+			var transaction = db.transaction(["Servicos"], "readwrite");
+
+			var store = transaction.objectStore("Servicos");
+
+			var request = store.get(Number(id));
+
+			request.onsuccess = function(e){
+				var data = request.result;
+				data.reserva = pet;
+				// console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
+
+				var requestUpdate = store.put(data);
+				requestUpdate.onsuccess = function(event){
+					alert("O id " + id + " foi atualizado");
+				}
+			};
+
+			db.close();
+
+			goToSchedule();
+		};
+    });
 }
 
 function listScheduleService(){
@@ -1073,7 +1124,42 @@ function listScheduleService(){
             var request = indexedDB.open("petshop", 3);
 
 			//Abre o banco de dados e abre a tabela de animais
-            request.onsuccess = function(event){
+			request.onsuccess = function(event){
+                var db = event.target.result;
+
+                var transaction = db.transaction(["Animais"], "readwrite");
+
+                var store = transaction.objectStore("Animais");
+
+                var count = store.count();
+
+                count.onsuccess = function(){
+                    n = count.result;
+                };
+
+                var getAll = store.getAll();
+
+                getAll.onsuccess = function(e){
+                    table = e.target.result;
+                    var table2 = [];
+                    var n2 = 0;
+
+					//Usa a funcao changeHTML para mudar o HTML da pagina de acordo com o que tem no banco de dados
+                    for (i=0;i<n;i++){
+                        if(table[i].login === loggedUser){
+                            table2[n2] = table[i];
+                            n2++;
+                        }
+                    }
+                    changeHTML(table2, n2, "#animais");
+                };
+
+                db.close();
+            };
+
+            request = indexedDB.open("petshop", 3);
+			n = 0;
+			request.onsuccess = function(event){
                 var db = event.target.result;
 
                 var transaction = db.transaction(["Servicos"], "readwrite");
@@ -1111,7 +1197,6 @@ function listScheduleService(){
 
                 db.close();
             };
-
         }catch(err){
             console.log(err.message);
         }
@@ -1429,8 +1514,10 @@ function registerService(){
             var descricao = $("#descricao").val();
             var photo = $("#photo").attr('src');
             var price = $("#price").val();
+            var hour = $("#hour").val();
+            var date = $("#date").val();
 
-            if(name !== "" && descricao !== "" && price !== ""){
+            if(name !== "" && descricao !== "" && price !== "" && hour !== "" && date !== ""){
 
 				var request = indexedDB.open("petshop", 3);
 
@@ -1446,6 +1533,9 @@ function registerService(){
                         photo: photo,
 						descricao: descricao,
 						preco: Number(price),
+						hora: hour,
+						date: date,
+						reserva: "none"
 					};
 
 					var add = store.add(service);
@@ -1453,7 +1543,6 @@ function registerService(){
 					add.onsuccess = function(e){
 						//console.log("cadastrou bunito");
 					};
-
 
 					db.close()
 				};
