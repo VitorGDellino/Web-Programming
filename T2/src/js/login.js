@@ -1,9 +1,9 @@
-/*----------------FUNCOES RELACIONADAS A NAVEGACAO----------------------------*/
 //a variavel state é usada para saber se é necessario mudar as colunas laterais ou apenas a coluna do meio
 state = 0;
 loggedUser = "";
 pet_id = 0;
 cart = [];
+valorTotaldaCompra = 0;
 
 //Funcao que carrega a pagina Home
 function goToHome(){
@@ -112,6 +112,7 @@ function goToStockManager(){
     });
 }
 
+// Funcao que lista os produtos disponiveis para comprar
 function listProductsToBuy(){
     $(document).ready( function(){
         try{
@@ -162,20 +163,21 @@ function goToBuy (){
         }else{
             $("#mutableMiddleColumn").load("../html/colunameiobuy.html");
         }
-
+        cart = [];
+        valorTotaldaCompra = 0;
         listProductsToBuy();
         state = 1;
     });
 }
 
-
+// Funcao que insere os produtos no carrinho
 function insertInCart(product){
-    console.log(product.id)
+    //console.log(product.id)
     var quantity = $("#"+product.id).val();
     var hasUpdate = false;
     if(quantity != "") {
         aux = {
-            name: product,
+            name: product.id,
             quant: parseInt(quantity)
         };
         for (var item in cart) {
@@ -197,12 +199,15 @@ function insertInCart(product){
             }
         }
     }
-    console.log(cart);
 }
 
+// Funcao que calcula o valor da compra e muda o html para finalizar o pagamento
 function finalizeBuy(){
     $(document).ready( function(){
         var valorDaCompra = 0;
+        var n = 0;
+        var table = [];
+        var n2 = 0;
 
         var request = indexedDB.open("petshop", 3);
 
@@ -216,91 +221,66 @@ function finalizeBuy(){
             };
             var getAll = store.getAll();
             getAll.onsuccess = function(e){
-                for (var item_cart in cart) { //checa se os a quantidade pedida esta disponivel em estoque e calcula o valor final da compra
-                    for (var item_bd in e.target.result) {
-                        if (cart[item_cart].name == e.target.result[item_bd].name) {
-                            if (e.target.result[item_bd].qtd_estoque < cart[item_cart].quant) {
+                var result = e.target.result;
+                flag = 0;
+                c_len = cart.length;
+                for(j=0;j<c_len;j++){
+                    for(i=0;i<n;i++){
+                        if(cart[j].name === result[i].name){
+                            if(cart[j].quant > result[i].qtd_estoque){
                                 alert ("Quantidade de item nao disponivel em estoque");
-                                //TODO voltar para tela inicial de Comprar
+                                goToBuy();
                                 cart = [];
+                                flag = 1;
                                 break;
-                            } else {
-                                valorDaCompra += e.target.result[item_bd].preco * cart[item_cart].quant;
-                                updateStorage(item_bd, cart[item_cart].quant);
+                            }else{
+                                valorDaCompra+=(result[i].preco*cart[j].quant);
+                                table[n2] = result[i];
+                                updateStorage(result[i].id, cart[j].quant);
+                                n2++;
                             }
                         }
                     }
                 }
-                finishingSale(valorDaCompra);
+
+                if(flag != 1){
+                    //console.log("VALOR DA COMPRA" + valorDaCompra);
+                    changeHTML(table,n2, '#cartList');
+                    changeHTML(0, valorDaCompra, '#finalizeBuy');
+                    valorTotaldaCompra = valorDaCompra;
+                }
+
             };
 
             db.close();
         };
 
-        changeHTML(0,0, '#cartList');
     });
 }
 
-function listBuy(){
-    $(document).ready( function(){
-        try{
-
-            var n = 0;
-            var table;
-            var request = indexedDB.open("petshop", 3);
-
-			//Abre o banco de dados e abre a tabela de animais
-            request.onsuccess = function(event){
-                var db = event.target.result;
-
-                var transaction = db.transaction(["Estoque"], "readwrite");
-
-                var store = transaction.objectStore("Estoque");
-
-                var count = store.count();
-
-                count.onsuccess = function(){
-                    n = count.result;
-                };
-
-                var getAll = store.getAll();
-
-                getAll.onsuccess = function(e){
-                    table = e.target.result;
-                    changeHTML(table, n, "#cartList");
-                };
-
-                db.close();
-            };
-
-        }catch(err){
-            console.log(err.message);
-        }
-    });
-}
-
+// Funcao que carrega o codigo html para finalizar a compra de produtos
 function goToFinalizeBuy(){
         $("#mutableMiddleColumn").load("../html/colunameioprodutocartao.html");
         state = 1;
         finalizeBuy();
 }
 
-function finishingSale(totalValue) {
-    changeHTML(0, totalValue, '#finalizeBuy');
+// Funcao que insere a venda realizada no banco de Dados
+function finishingSale() {
     var request = indexedDB.open("petshop", 3);
     request.onsuccess = function(event) {
         var db = event.target.result;
         var transaction = db.transaction(["Vendas"], "readwrite");
         var store = transaction.objectStore("Vendas");
         var itens = "";
-        for (var item_cart in cart) {
-            itens += cart[item_cart].name + "," + cart[item_cart].quant + ". ";
+        for (i=0;i<cart.length;i++) {
+            itens += cart[i].name + "," + cart[i].quant + ". ";
         }
-        console.log(totalValue);
+        //console.log(valorTotaldaCompra);
         var venda = {
             user: loggedUser,
             itens: itens,
-            total: totalValue
+            total: valorTotaldaCompra
         };
         var request = store.add(venda);
 
@@ -308,44 +288,50 @@ function finishingSale(totalValue) {
     };
 }
 
+// Funcao que efetiva a compra em si
 function afterBuy() {
-    numero = document.getElementById("cartaoInput").value;
-    console.log(numero);
+    numero = $("#cartaoInput").val();
+    //console.log(numero);
     if (numero == "") {
         alert('O numero do cartao deve ser preenchido!');
     } else {
         alert('compra realizada com sucesso!');
+        finishingSale();
         goToHome();
     }
 }
 
-function updateStorage(product_id, quantidadeVendida) {
+// Funcao que atualiza o estoque após uma venda
+function updateStorage(id, quantidadeVendida) {
     var request = indexedDB.open("petshop", 3);
-    console.log("id: "+product_id);
+    //console.log("id: "+product_id);
 
     request.onsuccess = function(event){
         var db = event.target.result;
         var transaction = db.transaction(["Estoque"], "readwrite");
         var store = transaction.objectStore("Estoque");
-        var get = store.get(product_id);
+        var get = store.get(id);
 
         get.onsuccess = function(e) {
             var result = e.target.result;
             if(typeof result !== "undefined"){
                 var produto = {
+                    id: result.id,
                     name: result.name,
                     photo: result.photo,
-                    descricao: resulta.descricao,
+                    descricao: result.descricao,
                     preco: result.preco,
                     qtd_estoque: result.qtd_estoque - quantidadeVendida,
                     qtd_vendida: result.qtd_vendida + quantidadeVendida
                 };
+
                 var update = store.put(produto);
-                update.onssuccess = function(e) {
-                    console.log("fechou o produto");
+                update.onsuccess = function(e) {
+                    //console.log("atualizou o produto");
                 }
             }
         };
+
 
         db.close();
     };
@@ -475,7 +461,7 @@ function readURL(input) {
 //Funcao para registrar os animais
 function registerPet(){
     $(document).ready( function(){
-        //console.log("entrou pet");
+        ////console.log("entrou pet");
         try {
             var petName = $("#petName").val();
             var race = $("#race").val();
@@ -499,7 +485,7 @@ function registerPet(){
                     };
                     var add = store.add(pet);
                     add.onsuccess = function(e){
-                        console.log("cadastrou bunito");
+                        //console.log("cadastrou bunito");
                     }
 
                     db.close();
@@ -511,9 +497,9 @@ function registerPet(){
             console.log(err.message);
         }
 
-        // console.log(petName);
-        // console.log(race);
-        // console.log(age);
+        //console.log(petName);
+        //console.log(race);
+        //console.log(age);
     });
 }
 
@@ -655,7 +641,7 @@ function editProfile(){
                     isAdmin: isAdmin
                 };
 
-                console.log(newPhoto);
+                //console.log(newPhoto);
 				//Verifica se as senhas inseridas sao iguais
                 if(newPassWord === newPassWord2){
                     if(newPassWord === oldPassWord && newPassWord !== "" && empty_password == 0){
@@ -665,7 +651,7 @@ function editProfile(){
                         var update = store.put(user);
 
                         update.onsuccess = function(){
-                            console.log("alterou bunito");
+                            //console.log("alterou bunito");
                             $("#userPhoto").attr('src', user.photo);
                         }
 
@@ -682,7 +668,7 @@ function editProfile(){
 
     });
 }
-/*----------------------------------------------------------------------------*/
+
 //Funcao que carrega o card de foto e o nome de usuario quando é logado
 function userCard(name, photo){
     $(document).ready( function(){
@@ -733,7 +719,7 @@ function adminNavBar(){
         $("#mutableNavBar").load("../html/adminnavbar.html");
     });
 }
-/*----------------------------utilidades--------------------------------------*/
+
 
 //Funcao que deleta o animal do usuario do banco de dados
 function deletePet(id){
@@ -924,7 +910,7 @@ function carregarProduto(){
 							document.getElementById("price").value = request.result.preco;
 							document.getElementById("stock").value = request.result.qtd_estoque;
 							document.getElementById("sold").value = request.result.qtd_vendida;
-							// console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
+							// //console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
 						}else{
 							alert("O ID não existe");
 						}
@@ -953,7 +939,7 @@ function atualizarProduto(){
 			var preco = $("#price").val();
 			var stock = $("#stock").val();
 			var sold = $("#sold").val();
-			console.log(photo);
+			//console.log(photo);
 
             if(confirm("Quer mesmo atualizar o produto?")){
 				if(id !== "" && name !== "" && descricao !== "" && preco !== "" && stock !== "" && sold !== ""){
@@ -974,7 +960,7 @@ function atualizarProduto(){
 							data.preco = preco;
 							data.qtd_estoque = stock;
 							data.qtd_vendida = sold;
-							// console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
+							// //console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
 
 							var requestUpdate = store.put(data);
 								requestUpdate.onsuccess = function(event){
@@ -1039,15 +1025,14 @@ function deletarProduto(){
 
 //Funcao para mudar o html da pagina, por exemplo na parte de listar servicos e produtos
 function changeHTML(table, n, id){
-    if (id === '#cartList') {
+    if (id === '#cartList'){
         var eachline = "";
-        for (var item in cart) {
-            eachline += '<li><img class="imgProdProdutoCartaoCliente" src="../assets/Ppurina.jpg" scrolling="no" alt="Instagram"/><br>'+ cart[item].name +'<br>Quantidade: '+ cart[item].quant +'<br></li>';
+        for (i=0;i<n;i++) {
+            eachline += '<li><img class="imgProdProdutoCartaoCliente" src="'+table[i].photo+'" scrolling="no" alt="Instagram"/><br>'+ table[i].name +'<br>Quantidade: '+ cart[i].quant +'<br></li>';
         }
-    } else if (id === "#finalizeBuy") {
-        var valor = Math.round(n*100)/100;
-        var eachline = 'Preço: '+ valor +'<br>Cartão de Crédito: <input name="quantCompra"><br><button class="btn" type="button">Finalizar</button>';
-    } else if(id === "#estoque"){		//Listar produtos
+    }else if (id === "#finalizeBuy"){
+        var eachline = 'Preço: '+ n.toFixed(2).toString() +'<br>Cartão de Crédito: <input id="cartaoInput" type="text" name="quantCompra"><br><button class="btn" type="button" onclick="afterBuy();">Finalizar</button>';
+    }else if(id === "#estoque"){		//Listar produtos
         var eachline = "<tr><th>Id</th><th>Nome</th><th>Descrição</th><th>Preço</th><th>Quantidade em estoque</th><th>Quantidade vendida</th></tr>";
         for(i=0; i<n; i++){
             eachline += "<tr><td>"+ table[i].id.toString()+"</td><td>"+ table[i].name+"</td><td>"+table[i].descricao+"</td><td>"+table[i].preco.toString()+"</td><td>"+table[i].qtd_estoque.toString()+"</td><td>"+table[i].qtd_vendida.toString()+"</td></tr>";
@@ -1068,7 +1053,7 @@ function changeHTML(table, n, id){
         var eachline = ""
 		eachline += '<select id="pet">'
         for(i=0; i<n; i++){
-			eachline += ' <option value="'+ table[i].petName +'">' + table[i].petName + '</option>'	
+			eachline += ' <option value="'+ table[i].petName +'">' + table[i].petName + '</option>'
         }
 		eachline += '</select>' + "<br><br>" + 'Cartão de Crédito: <input type="text">'
 
@@ -1086,11 +1071,11 @@ function changeHTML(table, n, id){
     }else{
         var eachline="";
         for(i=0; i<n; i++){
-            console.log(n);
+            //console.log(n);
             eachline += '<li><img src='+ table[i].petPhoto+ ' alt="Someone" style="width:130px; height:130px;"><br>Nome: ' + table[i].petName + "<br>Raça: " + table[i].race + "<br>Idade: " + table[i].age + "<br>" + '<a><button class="btn" type="button" onClick="goToEditPet('+table[i].id+');">Atualizar</button></a><button class="btn" type="button" onclick="deletePet('+table[i].id+')">Deletar</button><br></li>';
         }
     }
-    console.log(id);
+    //console.log(id);
     $(id).html(eachline);
 }
 
@@ -1098,6 +1083,7 @@ function Reservar(id){
 	$(document).ready( function(){
 		var pet = $("#pet").val();
 		console.log(pet);
+<<<<<<< HEAD
 		
 		if(pet!==null){
 			var request = indexedDB.open("petshop", 3);
@@ -1105,6 +1091,14 @@ function Reservar(id){
 			request.onsuccess = function(event){
 				//Abre o banco de dados e deleta o id selecionado
 				var db = event.target.result
+=======
+
+		var request = indexedDB.open("petshop", 3);
+
+		request.onsuccess = function(event){
+			//Abre o banco de dados e deleta o id selecionado
+			var db = event.target.result
+>>>>>>> 0cdaedbe5c8bc47a3e1f1fb35f9bff25e0ff5ff4
 
 				var transaction = db.transaction(["Servicos"], "readwrite");
 
@@ -1117,6 +1111,7 @@ function Reservar(id){
 					data.reserva = pet;
 					// console.log(request.result.name + " " + request.result.descricao + " " + request.result.preco);
 
+<<<<<<< HEAD
 					var requestUpdate = store.put(data);
 					requestUpdate.onsuccess = function(event){
 						alert("O id " + id + " foi atualizado");
@@ -1124,6 +1119,15 @@ function Reservar(id){
 				};
 				
 				db.close();
+=======
+				var requestUpdate = store.put(data);
+				requestUpdate.onsuccess = function(event){
+					alert("O id " + id + " foi atualizado");
+				}
+			};
+
+			db.close();
+>>>>>>> 0cdaedbe5c8bc47a3e1f1fb35f9bff25e0ff5ff4
 
 				goToSchedule();
 			};
@@ -1137,7 +1141,7 @@ function listScheduleService(){
     $(document).ready( function(){
         try{
             var date = $("#Calendario").val();
-			console.log(date);
+			//console.log(date);
             var n = 0;
             var table;
             var request = indexedDB.open("petshop", 3);
@@ -1175,7 +1179,7 @@ function listScheduleService(){
 
                 db.close();
             };
-			
+
             request = indexedDB.open("petshop", 3);
 			n = 0;
 			request.onsuccess = function(event){
@@ -1197,7 +1201,7 @@ function listScheduleService(){
                     table = e.target.result;
                     var table2 = [];
                     var n2 = 0;
-					//console.log(table[0].date);
+					////console.log(table[0].date);
 
 					//Usa a funcao changeHTML para mudar o HTML da pagina de acordo com o que tem no banco de dados
                     for (i=0;i<n;i++){
@@ -1281,7 +1285,7 @@ function listStock(){
             var table;
             var request = indexedDB.open("petshop", 3);
 
-            console.log("estoque");
+            //console.log("estoque");
 
             request.onsuccess = function(event){
                 var db = event.target.result;
@@ -1393,7 +1397,7 @@ function registerAdmin(){
 						var add = store.add(user);
 
 						add.onsuccess = function(e){
-							console.log("cadastrou bunito");
+							//console.log("cadastrou bunito");
                             alert("Cadastro realizado com sucesso");
                             goToAdminRegister();
 						}
@@ -1452,7 +1456,7 @@ function registerClient(){
 						var add = store.add(user);
 
 						add.onsuccess = function(e){
-							console.log("cadastrou bunito");
+							//console.log("cadastrou bunito");
                             alert("Cadastro efetuado com sucesso");
                             goToClientRegister();
 						};
@@ -1507,7 +1511,7 @@ function registerProduct(){
 					var add = store.add(product);
 
 					add.onsuccess = function(e){
-						console.log("cadastrou bunito");
+						//console.log("cadastrou bunito");
 					};
 
 
@@ -1560,7 +1564,7 @@ function registerService(){
 					var add = store.add(service);
 
 					add.onsuccess = function(e){
-						console.log("cadastrou bunito");
+						//console.log("cadastrou bunito");
 					};
 
 					db.close()
@@ -1583,8 +1587,8 @@ function userLogin(){
         var passWord = document.getElementById("login").elements.namedItem("passWord").value;
         loggedUser = userName;
 
-        console.log(userName);
-        console.log(passWord);
+        //console.log(userName);
+        //console.log(passWord);
 		//Pega os valores das txtbox do html
         var request = indexedDB.open("petshop", 3);
 
@@ -1629,8 +1633,8 @@ function adminLogin(){
         var userName = document.getElementById("login").elements.namedItem("userName").value;
         var passWord = document.getElementById("login").elements.namedItem("passWord").value;
 
-        console.log(userName);
-        console.log(passWord);
+        //console.log(userName);
+        //console.log(passWord);
 
         var request = indexedDB.open("petshop", 3);
 
@@ -1649,7 +1653,7 @@ function adminLogin(){
                     if(result.login === userName && result.passWord === passWord && result.isAdmin){
                         adminNavBar();
                         adminCard(userName, result.photo);
-                        console.log("WELCOME LORD");
+                        //console.log("WELCOME LORD");
                     }else{
                         alert("VOCE NÃO É UM ADMIN!!");
                     }

@@ -179,7 +179,7 @@ $(document).ready( function(){
 
         add = store.add(pet);
 
-        /*pet = {
+        pet = {
                 login: "Vitor",
                 petName: "Cotinha",
                 petPhoto: "/images/pets/cotinha.jpeg",
@@ -187,7 +187,7 @@ $(document).ready( function(){
                 age: 5
         };
 
-        add = store.add(pet);*/
+        add = store.add(pet);
 
         pet = {
                 login: "Vitor",
